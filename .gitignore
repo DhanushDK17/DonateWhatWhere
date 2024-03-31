@@ -1,1 +1,6 @@
 frontend/node_modules
+descriptionai/descriptionservice/__pycache__
+descriptionai/descriptionservice/bin
+descriptionai/descriptionservice/include
+descriptionai/descriptionservice/lib
+.env
