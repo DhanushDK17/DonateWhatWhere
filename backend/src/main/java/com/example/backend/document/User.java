@@ -23,12 +23,15 @@ public class User implements UserDetails{
     @Indexed(unique = true)
     @NonNull
     private String username;
+
     @Indexed(unique = true)
     @NonNull
     private String email;
+
     @JsonIgnore
     @NonNull
     private String password;
+
     @SuppressWarnings("unchecked")
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -37,7 +40,6 @@ public class User implements UserDetails{
 
     @Override
     public String getPassword() {
-        
         return password;
     }
 
