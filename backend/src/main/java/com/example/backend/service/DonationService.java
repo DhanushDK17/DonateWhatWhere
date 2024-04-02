@@ -20,4 +20,29 @@ public class DonationService {
     public List<Donation> getAllDonations() {
         return donationRepository.findAllDonations();
     }
+
+    // Get all donations of a particular user by their username
+    public List<Donation> getAllDonationsByUsername(String username) {
+        return donationRepository.findByDonorName(username);
+    }
+
+    // Create a new donation
+    public Donation createDonation(Donation donation) {
+        return donationRepository.save(donation);
+    }
+
+    // Get a donation by its ID
+    public Donation getDonationById(String id) {
+        return donationRepository.findById(id).orElse(null);
+    }
+
+    // Update an existing donation
+    public Donation updateDonation(Donation updatedDonation) {
+        return donationRepository.save(updatedDonation);
+    }
+
+    // Delete a donation by its ID
+    public void deleteDonation(String id) {
+        donationRepository.deleteById(id);
+    }
 }

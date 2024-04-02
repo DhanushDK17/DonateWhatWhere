@@ -11,4 +11,6 @@ public interface DonationRepository extends MongoRepository<Donation, String> {
         // Retrieve all donations from the database using the default findAll() method
         return findAll();
     }
+
+    List<Donation> findByDonorName(String donorName);
 }
