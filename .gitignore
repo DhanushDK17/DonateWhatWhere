@@ -4,3 +4,6 @@ descriptionai/descriptionservice/bin
 descriptionai/descriptionservice/include
 descriptionai/descriptionservice/lib
 .env
+.venv
+env/
+venv/
