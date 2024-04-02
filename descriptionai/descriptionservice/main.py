@@ -5,6 +5,7 @@ from typing import List
 import google.generativeai as genai
 from PIL import Image
 from io import BytesIO
+from service.description import generateDescription
 
 from dotenv import load_dotenv
 
