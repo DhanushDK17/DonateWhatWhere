@@ -1,0 +1,32 @@
+.container {
+    padding: 0rem 5rem;
+  }
+  
+  .header {
+    background-size: cover; /* Ensure the image covers the entire AppBar */
+    background-repeat: no-repeat; /* Ensure the image doesn't repeat */
+    background-position: center; /* Center the background image */
+  }
+  
+  .link {
+    text-decoration: none;
+  }
+  
+  .link.active {
+    text-decoration: underline;
+  }
+  
+  .logo {
+    margin-left: -100px !important;
+  }
+  
+  .navLinkNoUnderline {
+    text-decoration: none !important; 
+  }
+  
+  .MuiGrid-root {
+    .MuiGrid-item {
+      max-width: unset !important;
+    }
+    
+  }
