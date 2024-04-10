@@ -4,5 +4,8 @@ descriptionai/descriptionservice/__pycache__
 descriptionai/descriptionservice/bin
 descriptionai/descriptionservice/include
 descriptionai/descriptionservice/lib
-.env
 backendv2/app/__pycache__
+.env
+.venv
+env/
+venv/
