@@ -1,0 +1,144 @@
+body {
+  /* 
+    padding: 0;
+  */
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
+  margin: 0;
+  background-color: #f4f4f4;
+  width: auto;
+}
+
+.content-wrapper {
+  flex: 1; /* This allows the content to grow and consume available space, pushing the footer down */
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  color: #f55951;
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: #543c52;
+}
+
+.tag {
+  background-color: white;
+}
+
+.tagline {
+  color: #543c52;
+  font-size: 20px;
+  font-style: italic;
+  margin: 10px;
+  background-color: #fff;
+}
+
+.tagline1 {
+  color: #543c52;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* LoginRegister */
+
+.main-login-register {
+  padding-top: 100px;
+  background-color: #f1e8e6;
+  height: 100%;
+}
+
+.login-register-title {
+  color: #f55951;
+  font-size: 24px;
+  margin: 10px;
+  text-align: center;
+}
+
+.register-form .login-register-input {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+  width: 95%;
+  margin-bottom: 25px;
+}
+
+.eye-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 58%;
+  right: 380px;
+  transform: translateY(-50%);
+  color: #361d32; /* Adjust the color as needed */
+}
+
+.login-register {
+  font-family: "Poppins", sans-serif;
+  width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.login-form,
+.register-form {
+  display: flex;
+  flex-direction: column;
+  padding: auto;
+}
+
+.login-form input,
+.register-form input {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+  width: 95%;
+  margin-bottom: 25px;
+}
+
+.login-form input:focus,
+.register-form input:focus {
+  border-color: #361d32;
+}
+
+.submit-btn {
+  font-family: "Poppins", sans-serif;
+  padding: 10px 20px;
+  background-color: #361d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.signup-btn {
+  font-family: "Poppins", sans-serif;
+  padding: 10px 20px;
+  background-color: #7c78b8;
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #f55951;
+}
