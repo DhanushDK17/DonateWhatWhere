@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <Link to="/" className="footer-logo">
-          Bobcat Carpool
+          Donate What Where
         </Link>
         <div className="footer-links">
           <Link to="/about" className="footer-item">
@@ -21,7 +21,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-copyright">
-        © {new Date().getFullYear()} Bobcat Carpool. All rights reserved.
+        © {new Date().getFullYear()} Donate What Where. All rights reserved.
       </div>
     </footer>
   );
