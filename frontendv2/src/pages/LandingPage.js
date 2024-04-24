@@ -1,9 +1,9 @@
 import React from "react";
 import Footer from "./Footer";
-import { SiGooglemaps } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/images/main2.png";
-
+import home from "../assets/images/home.png";
+import NavBar from "./NavBar";
 const LandingPage = () => {
   const navigate = useNavigate();
   const handleJoinButton = () => {
@@ -12,12 +12,29 @@ const LandingPage = () => {
 
   return (
     <div className="content-wrapper">
+      <NavBar />
       <section className="hero">
-        <h1>Welcome to Donate What Where</h1>
-        <p>Transform Lives: Donate to Create Brighter Futures!.</p>
-        <button className="cta-btn" onClick={handleJoinButton}>
-          Join Us Today!
-        </button>
+        <div className="statistics">
+          <div className="stat-item">
+            <img
+              src={home}
+              alt="img"
+              style={{ width: "60%", height: "auto" }}
+            />
+          </div>
+          <div className="stat-item">
+            <h1 style={{ fontSize: "24px" }}>Donation Platform Features</h1>
+            <p style={{ fontSize: "18px" }}>
+              A fundraising platform designed to offer top-notch features and
+              functionality tailored to meet your organization's needs, all
+              while being budget-friendly. Unlock the power of enterprise-level
+              solutions at a fraction of the cost with Donate What Where.
+            </p>
+            <button className="cta-btn" onClick={handleJoinButton}>
+              Get Started
+            </button>
+          </div>
+        </div>
       </section>
       <div className="tag">
         <img
@@ -25,7 +42,6 @@ const LandingPage = () => {
           alt="Bobcat Carpool Logo"
           style={{ width: "100%", height: "auto" }}
         />
-        <h2 className="tagline1">Be the Change You Wish to See. Donate!</h2>
       </div>
       <section className="stats">
         <h2 className="title">Our Impact</h2>

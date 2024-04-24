@@ -15,8 +15,8 @@ const Footer = () => {
           <Link to="/how-it-works" className="footer-item">
             How It Works
           </Link>
-          <Link to="/contact" className="footer-item">
-            Contact
+          <Link to="/support" className="footer-item">
+            Support
           </Link>
         </div>
       </div>

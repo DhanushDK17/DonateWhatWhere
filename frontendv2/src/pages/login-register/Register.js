@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { MdLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
+import dollar from "../../assets/images/dollar.png";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -61,6 +63,10 @@ const Register = () => {
     }
   };
 
+  const handleSupportButton = () => {
+    navigate("/support");
+  };
+
   const handleLogin = () => {
     // Navigate to the Register page
     navigate("/login");
@@ -68,83 +74,118 @@ const Register = () => {
 
   return (
     <div className="main-login-register">
-      <div className="login-register">
-        <form onSubmit={handleRegister} className="register-form">
-          <h2 className="login-register-title">
-            Sign up <MdLogin style={{ color: "#98ed64" }} />
-          </h2>
-          <div style={{ textAlign: "center", fontSize: "14px" }}>
-            Every Donation Counts. Join Us!
-          </div>
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="login-register-input"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={registerEmail}
-            onChange={(e) => setRegisterEmail(e.target.value)}
-            className="login-register-input"
-            required
-          />
+      <NavBar />
+      <section className="login-container">
+        <div className="statistics">
+          <div className="stat-item">
+            <div className="login-register">
+              <form onSubmit={handleRegister} className="register-form">
+                <h2 className="login-register-title">
+                  Sign up <MdLogin style={{ color: "#98ed64" }} />
+                </h2>
+                <div style={{ textAlign: "center", fontSize: "14px" }}>
+                  Every Donation Counts. Join Us!
+                </div>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={registerPassword}
-            onChange={(e) => setRegisterPassword(e.target.value)}
-            className="login-register-input"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="login-register-input"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Phone number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="login-register-input"
-            required
-          />
-          <input
-            type="file"
-            accept=".jpg, .jpeg, .png"
-            onChange={(e) => setPhoto(e.target.files[0])}
-            className="login-register-input"
-            placeholder="Upload your photo"
-          />
-          <button type="submit" className="submit-btn">
-            Sign Up
-          </button>
-          <div
-            style={{ textAlign: "center", margin: "15px", fontSize: "14px" }}
-          >
-            -------------OR-------------
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
+                <input
+                  type="number"
+                  placeholder="Phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(e) => setPhoto(e.target.files[0])}
+                  className="login-register-input"
+                  placeholder="Upload your photo"
+                />
+                <button type="submit" className="submit-btn">
+                  Sign Up
+                </button>
+                <div
+                  style={{
+                    textAlign: "center",
+                    margin: "15px",
+                    fontSize: "14px",
+                  }}
+                >
+                  -------------OR-------------
+                </div>
+                <div
+                  style={{
+                    paddingLeft: "5px",
+                    fontSize: "14px",
+                    margin: "0px",
+                  }}
+                >
+                  Already have an account?
+                </div>
+                <button
+                  type="button"
+                  className="signup-btn"
+                  style={{ background: "#edd2cb", color: "#361d32" }}
+                  onClick={handleLogin}
+                >
+                  Log In
+                </button>
+              </form>
+            </div>
           </div>
-          <div style={{ paddingLeft: "5px", fontSize: "14px", margin: "0px" }}>
-            Already have an account?
+          <div className="stat-item">
+            <h1 style={{ fontSize: "24px", color: "#f55951" }}>
+              Trusted by thousands of nonprofits, schools, and businesses
+            </h1>
+            <img
+              src={dollar}
+              alt="img"
+              style={{ width: "30%", height: "auto" }}
+            />
+            <p style={{ fontSize: "18px" }}>Simple to Use and Customize</p>
+            <p style={{ fontSize: "18px" }}>No Hidden Fees or Add-on Costs</p>
+            <p style={{ fontSize: "18px" }}>Safe, Secure Pages & Forms</p>
+            <p style={{ fontSize: "18px" }}>Great Customer Support</p>
+
+            <button className="cta-btn" onClick={handleSupportButton}>
+              Talk to our Support Team
+            </button>
           </div>
-          <button
-            type="button"
-            className="signup-btn"
-            style={{ background: "#edd2cb", color: "#361d32" }}
-            onClick={handleLogin}
-          >
-            Log In
-          </button>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 };
