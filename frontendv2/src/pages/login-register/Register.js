@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MdLogin } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../NavBar";
 import dollar from "../../assets/images/dollar.png";
 
@@ -8,26 +8,31 @@ const Register = () => {
   const navigate = useNavigate();
 
   // State for registration
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [photo, setPhoto] = useState(null);
   const [phone, setPhone] = useState("");
+  const location = useLocation();
+  const { userType } = location.state || {};
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     // Create the request body
     const requestBody = {
-      name: fullName,
+      first_name: firstName,
+      last_name: lastName,
       email: registerEmail,
       password: registerPassword,
       phone: phone,
+      user_type: userType,
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
+      const response = await fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +42,7 @@ const Register = () => {
 
       if (response.ok) {
         // Registration successful
-        const formData = new FormData();
+        /* const formData = new FormData();
         formData.append("email", registerEmail);
         formData.append("profile_photo", photo);
 
@@ -50,7 +55,7 @@ const Register = () => {
             throw new Error("Network response was not ok.");
           }
           console.log(imageResponse.json());
-        });
+        });*/
         alert("Registration successful!");
         navigate("/login");
       } else {
@@ -64,11 +69,12 @@ const Register = () => {
   };
 
   const handleSupportButton = () => {
+    // Navigate to the Support page
     navigate("/support");
   };
 
   const handleLogin = () => {
-    // Navigate to the Register page
+    // Navigate to the Login page
     navigate("/login");
   };
 
@@ -88,9 +94,17 @@ const Register = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="login-register-input"
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                   className="login-register-input"
                   required
                 />
@@ -127,13 +141,13 @@ const Register = () => {
                   className="login-register-input"
                   required
                 />
-                <input
+                {/*<input
                   type="file"
                   accept=".jpg, .jpeg, .png"
                   onChange={(e) => setPhoto(e.target.files[0])}
                   className="login-register-input"
                   placeholder="Upload your photo"
-                />
+                />*/}
                 <button type="submit" className="submit-btn">
                   Sign Up
                 </button>
@@ -158,7 +172,7 @@ const Register = () => {
                 <button
                   type="button"
                   className="signup-btn"
-                  style={{ background: "#edd2cb", color: "#361d32" }}
+                  style={{ background: "#543c52", color: "#fff" }}
                   onClick={handleLogin}
                 >
                   Log In

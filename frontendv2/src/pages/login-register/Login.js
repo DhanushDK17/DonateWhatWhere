@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
+import dollar from "../../assets/images/dollar.png";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,10 +13,14 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const handleSupportButton = () => {
+    navigate("/support");
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const apiUrl = "http://127.0.0.1:8000/api/login";
+    const apiUrl = "http://localhost:8000/api/login";
 
     try {
       const response = await fetch(apiUrl, {
@@ -82,7 +88,7 @@ const Login = () => {
           // Handle errors for the GET request
           console.error("Error making GET request:", error.message);
         }
-        navigate("/rideoption");
+        navigate("/");
       }
     } catch (error) {
       // Handle errors here
@@ -101,55 +107,72 @@ const Login = () => {
 
   return (
     <div className="main-login-register">
-      <div className="login-register">
-        <form onSubmit={handleLogin} className="login-form">
-          <h2 className="login-register-title">
-            Log in <MdLogin style={{ color: "#98ed64" }} />
-          </h2>
-          <div style={{ textAlign: "center", fontSize: "14px" }}>
-            Together, We Make a Difference
-          </div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <NavBar />
+      <section className="login-container">
+        <div className="statistics">
+          <div className="stat-item">
+            <div className="login-register">
+              <form onSubmit={handleLogin} className="login-form">
+                <h2 className="login-register-title">
+                  Log in <MdLogin style={{ color: "#98ed64" }} />
+                </h2>
+                <div style={{ textAlign: "center", fontSize: "14px" }}>
+                  Together, We Make a Difference
+                </div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
 
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <div className="eye-icon" onClick={handleTogglePassword}>
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
-          </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <div className="eye-icon" onClick={handleTogglePassword}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </div>
 
-          <button type="submit" className="submit-btn">
-            Login
-          </button>
+                <button type="submit" className="submit-btn">
+                  Login
+                </button>
 
-          <div
-            style={{ textAlign: "center", margin: "15px", fontSize: "14px" }}
-          >
-            -------------OR-------------
+                <div
+                  style={{
+                    textAlign: "center",
+                    margin: "15px",
+                    fontSize: "14px",
+                  }}
+                >
+                  -------------OR-------------
+                </div>
+                <div
+                  style={{
+                    paddingLeft: "5px",
+                    fontSize: "14px",
+                    margin: "0px",
+                  }}
+                >
+                  Don't have an account?
+                </div>
+                <button
+                  type="button"
+                  className="signup-btn"
+                  style={{ background: "#543c52", color: "#fff" }}
+                  onClick={handleSignUp}
+                >
+                  Sign up
+                </button>
+              </form>
+            </div>
           </div>
-          <div style={{ paddingLeft: "5px", fontSize: "14px", margin: "0px" }}>
-            Don't have an account?
-          </div>
-          <button
-            type="button"
-            className="signup-btn"
-            style={{ background: "#edd2cb", color: "#361d32" }}
-            onClick={handleSignUp}
-          >
-            Sign up
-          </button>
-        </form>
-      </div>
+        </div>
+      </section>
     </div>
   );
 };

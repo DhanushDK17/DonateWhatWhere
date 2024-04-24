@@ -6,8 +6,9 @@ import home from "../assets/images/home.png";
 import NavBar from "./NavBar";
 const LandingPage = () => {
   const navigate = useNavigate();
+
   const handleJoinButton = () => {
-    navigate("/register");
+    navigate("/option");
   };
 
   return (

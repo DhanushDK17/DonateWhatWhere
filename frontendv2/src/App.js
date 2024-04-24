@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import ContactForm from "./pages/help/ContactForm";
 import About from "./pages/help/About";
 import FAQ from "./pages/help/FAQ";
+import Option from "./pages/login-register/Option";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/support" element={<ContactForm />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/option" element={<Option />} />
         </Route>
       </Routes>
     </Router>
