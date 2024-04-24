@@ -227,7 +227,7 @@ button:hover {
 
 /* Footer */
 .footer {
-  background-color: #543c52; /* Maroon */
+  background-color: #361d32;
   padding: 20px 0;
   font-family: "Poppins", sans-serif;
   width: 100%; /* Ensure it spans the full width */
@@ -452,4 +452,75 @@ button:hover {
 
 .contact-form button:hover {
   background-color: #543c52;
+}
+
+/* FAQ */
+.faq-container {
+  padding-top: 80px;
+  height: 100%;
+}
+.faq {
+  padding: 20px;
+  background-color: #fff;
+}
+
+.faq h2 {
+  color: #054957;
+  font-size: 24px;
+}
+
+.faq-item {
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.faq-item h3 {
+  color: #054957; /* Maroon */
+}
+
+/* About */
+.about {
+  padding: 20px;
+  background-color: #fff;
+  padding-top: 100px;
+}
+
+.about h2 {
+  color: #054957;
+  font-size: 22px;
+}
+
+.about p {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.about img {
+  max-width: 100%;
+}
+
+/* HowItWorks */
+.how-it-works {
+  padding: 20px;
+  background-color: #fff;
+  padding-top: 100px;
+  height: 100%;
+}
+
+.how-it-works h2 {
+  color: #054957;
+  font-size: 22px;
+}
+
+.how-it-works ol {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.how-it-works ol li {
+  margin-bottom: 10px;
+}
+
+.how-it-works img {
+  max-width: 100%;
 }

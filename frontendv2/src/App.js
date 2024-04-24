@@ -8,7 +8,6 @@ import LandingPage from "./pages/LandingPage";
 import ContactForm from "./pages/help/ContactForm";
 import About from "./pages/help/About";
 import FAQ from "./pages/help/FAQ";
-import HowItWorks from "./pages/help/HowItWorks";
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
           <Route path="/support" element={<ContactForm />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/how-it-works" element={<HowItWorks />} />
         </Route>
       </Routes>
     </Router>

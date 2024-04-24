@@ -130,13 +130,6 @@ const NavBar = () => {
             {isHelpDropdownOpen && (
               <div className="submenu">
                 <Link
-                  to="/how-it-works"
-                  className="submenu-item"
-                  onClick={(event) => handleHelpDropdownToggle(event)}
-                >
-                  How It Works
-                </Link>
-                <Link
                   to="/faq"
                   className="submenu-item"
                   onClick={(event) => handleHelpDropdownToggle(event)}
