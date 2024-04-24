@@ -212,7 +212,7 @@ const NavBar = () => {
                     Log in <IoIosArrowForward style={{ paddingLeft: "45px" }} />
                   </Link>
                   <Link
-                    to="/register"
+                    to="/option"
                     className="dropdown-item"
                     onClick={(event) => handleDropdownToggle(event)}
                   >

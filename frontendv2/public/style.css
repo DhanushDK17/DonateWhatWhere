@@ -144,7 +144,7 @@ button:hover {
 }
 
 .submit-btn:hover {
-  background-color: #361d32;
+  background-color: #543c52;
 }
 
 /* Home */
@@ -326,7 +326,6 @@ button:hover {
   padding: 10px 15px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-  font-weight: bold;
 }
 
 .nav-item:hover {
@@ -366,7 +365,6 @@ button:hover {
   padding: 8px 12px;
   text-decoration: none;
   color: #361d32; /* Add your preferred text color */
-  font-weight: bold;
   transition: background-color 0.3s;
 }
 
