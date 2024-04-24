@@ -5,6 +5,10 @@ import { MainLayout } from "./pages/MainLayout";
 import Login from "./pages/login-register/Login";
 import Register from "./pages/login-register/Register";
 import LandingPage from "./pages/LandingPage";
+import ContactForm from "./pages/help/ContactForm";
+import About from "./pages/help/About";
+import FAQ from "./pages/help/FAQ";
+import HowItWorks from "./pages/help/HowItWorks";
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/landingpage" element={<LandingPage />} />
+          <Route path="/support" element={<ContactForm />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
         </Route>
       </Routes>
     </Router>
