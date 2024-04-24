@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { IoMdMail } from "react-icons/io";
 import emailjs from "@emailjs/browser";
 import Footer from "../Footer";
+import NavBar from "../NavBar";
 
 const ContactForm = () => {
   const form = useRef();
@@ -32,6 +33,7 @@ const ContactForm = () => {
   };
   return (
     <div className="contact-form">
+      <NavBar />
       <form className="card-form" ref={form} onSubmit={sendEmail}>
         <h2>
           Contact Us{" "}
