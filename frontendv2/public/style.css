@@ -522,3 +522,100 @@ button:hover {
 .how-it-works img {
   max-width: 100%;
 }
+
+/* Chat */
+.chat {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+  padding-bottom: 70px;
+  margin-top: 350px;
+  width: 40vw;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 10px;
+  flex-grow: 1;
+  background-color: #ededed;
+}
+
+.message {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 70%;
+  align-self: flex-start; /* Align messages to the start by default */
+}
+
+.my-message {
+  background-color: #edd2cb;
+  color: #361d32;
+  align-self: flex-end; /* Align your messages to the end */
+  border-bottom-right-radius: 0;
+}
+
+.other-message {
+  background-color: #361d32;
+  color: white;
+  border-bottom-left-radius: 0;
+}
+
+.message-content {
+  word-break: break-word;
+}
+
+.message-sender-name {
+  margin-bottom: 5px;
+}
+
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1.5px solid #ccc;
+}
+
+.chat-input input {
+  font-family: "Poppins", sans-serif;
+  flex-grow: 1;
+  padding: 10px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+
+.chat-input button {
+  background-color: #f55951;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px; /* Adjust font size as needed */
+}
+
+.chat-input button:hover {
+  background-color: #543c52;
+}
+
+.chat-input button::after {
+  content: "➤"; /* Unicode right arrow */
+  display: inline-block;
+  margin-left: 5px;
+}

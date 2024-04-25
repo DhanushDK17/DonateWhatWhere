@@ -30,7 +30,7 @@ export default function Option() {
             <button
               className="login-register"
               style={{ border: "1.5px solid #f55951" }}
-              onClick={() => handleRegister("PERSONAL")}
+              onClick={() => handleRegister("ORGANIZATION")}
             >
               <h1>A Non Profit Organization</h1>
               <p>
@@ -42,7 +42,7 @@ export default function Option() {
             <button
               className="login-register"
               style={{ border: "1.5px solid #f55951" }}
-              onClick={() => handleRegister("ORGANIZATION")}
+              onClick={() => handleRegister("PERSONAL")}
             >
               <h1>An Individual</h1>
               <p>I would like to createan account for myself</p>
