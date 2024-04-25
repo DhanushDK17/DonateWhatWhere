@@ -88,7 +88,7 @@ const Login = () => {
           // Handle errors for the GET request
           console.error("Error making GET request:", error.message);
         }
-        navigate("/");
+        navigate("/userprofile");
       }
     } catch (error) {
       // Handle errors here
