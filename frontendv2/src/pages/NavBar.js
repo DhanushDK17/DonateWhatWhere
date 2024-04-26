@@ -181,7 +181,7 @@ const NavBar = () => {
               {isUserLoggedIn ? (
                 <>
                   <Link
-                    to="/login"
+                    to="/userprofile"
                     className="dropdown-item"
                     onClick={(event) => handleDropdownToggle(event)}
                   >
@@ -190,11 +190,11 @@ const NavBar = () => {
                   </Link>
                   {/* TODO: Neha can you help me here to set up conditional navigation to Rides or Passengers */}
                   <Link
-                    to="/combinedhistory"
+                    to="/claims"
                     className="dropdown-item"
                     onClick={(event) => handleDropdownToggle(event)}
                   >
-                    Ride History{" "}
+                    My Claims{" "}
                     <IoIosArrowForward style={{ paddingLeft: "35px" }} />
                   </Link>
                   <div className="dropdown-item" onClick={handleLogout}>
