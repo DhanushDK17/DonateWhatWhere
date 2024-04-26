@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import default_profile_photo from "../../assets/images/home.png";
+import default_profile_photo from "../../assets/images/profile.png";
 import default_cover_photo from "../../assets/images/main2.png";
 import NavBar from "../NavBar";
 
 const UserProfile = () => {
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState({});
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        //You can uncomment these lines
         const access = JSON.parse(sessionStorage.getItem("access"));
         const response = await fetch("http://localhost:8000/api/profile", {
           headers: {
@@ -19,15 +19,10 @@ const UserProfile = () => {
           },
         });
 
-        /* you can commented out these lines to... */
-        // const response = await fetch(
-        //   "https://run.mocky.io/v3/d80c60c3-7f40-44f4-bace-31eaeada02ad"
-        // );
-        /*...here*/
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
         setUserInfo(data);
       } catch (e) {
@@ -46,10 +41,36 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // You can perform actions like updating the user info here
-    console.log("Updated user info:", userInfo);
+  const handleSave = async () => {
+    console.log("Saving updated profile:");
+
+    try {
+      const access = JSON.parse(sessionStorage.getItem("access"));
+
+      const formData = new FormData();
+      formData.append("address", userInfo.address);
+      if (photo) {
+        formData.append("profile_photo_base64", photo);
+      }
+
+      const response = await fetch("http://localhost:8000/api/profile", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const updatedData = await response.json();
+      setUserInfo({ ...userInfo, profile: updatedData });
+      alert("Data saved successfully!!");
+    } catch (error) {
+      console.error("Failed to save profile:", error);
+    }
   };
 
   return (
@@ -64,7 +85,7 @@ const UserProfile = () => {
           />
           <div className="profile-header">
             <img
-              src={default_profile_photo}
+              src={userInfo.profile_photo_base64 || default_profile_photo}
               alt="Profile"
               className="profile-pic"
             />
@@ -72,8 +93,9 @@ const UserProfile = () => {
           </div>
         </div>
         <div className="profile-container">
-          <form onSubmit={handleSubmit} className="login-form">
-            <label>
+          <div className="login-form">
+            <br />
+            <label style={{ flexDirection: "row" }}>
               First Name:
               <input
                 type="text"
@@ -99,7 +121,6 @@ const UserProfile = () => {
                 type="email"
                 name="email"
                 value={userInfo.email}
-                onChange={handleChange}
                 disabled
               />
             </label>
@@ -120,8 +141,17 @@ const UserProfile = () => {
                 type="user_type"
                 name="user_type"
                 value={userInfo.user_type}
-                onChange={handleChange}
                 disabled
+              />
+            </label>
+
+            <label>
+              Profile picture:
+              <input
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                onChange={(e) => setPhoto(e.target.files[0])}
+                placeholder="Upload your photo"
               />
             </label>
 
@@ -135,10 +165,14 @@ const UserProfile = () => {
               />
             </label>
             <br />
-            <button type="submit" className="submit-btn">
+            <button
+              type="button" // Change the type to 'button'
+              className="submit-btn"
+              onClick={handleSave} // Trigger save action onClick
+            >
               Update
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

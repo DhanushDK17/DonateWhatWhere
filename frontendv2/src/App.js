@@ -10,7 +10,8 @@ import About from "./pages/help/About";
 import FAQ from "./pages/help/FAQ";
 import Option from "./pages/login-register/Option";
 import ChatTest from "./pages/chat/ChatTest";
-import UserProfile from "./pages/userprofile/UserProfile";
+import UserProfile from "./pages/user/UserProfile";
+import Claims from "./pages/user/Claims";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/option" element={<Option />} />
           <Route path="/chattest" element={<ChatTest />} />
           <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/claims" element={<Claims />} />
         </Route>
       </Routes>
     </Router>

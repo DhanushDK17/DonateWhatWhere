@@ -1,0 +1,60 @@
+/* styles.css */
+
+.main-claim-container {
+  padding: 80px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  background-color: #543c52;
+}
+
+.claim-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  border: 1.5px solid #f55951;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #edd2cb;
+  margin-top: 40px;
+}
+
+/* Styles for the app container */
+
+/* Styles for the heading */
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #f55951;
+}
+
+/* Styles for the donation list container */
+.donation-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styles for the donation card */
+.card {
+  border: 1.5px solid #361d32;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin: 10px;
+  width: 500px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* Styles for text elements */
+.text {
+  margin: 5px 0;
+}
+
+.no-history-image {
+  width: 120px;
+  height: 120px;
+}
