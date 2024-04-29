@@ -27,7 +27,6 @@ const Login = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // other headers...
         },
         body: JSON.stringify({
           email: email,
@@ -60,16 +59,12 @@ const Login = () => {
         console.log("Logged in user:", data.user.name);
         console.log("Access token:", data.access);
         console.log("Refresh token:", data.refresh);
-
-        const token = JSON.parse(sessionStorage.getItem("access"));
         try {
           const apiUrlGet = "http://127.0.0.1:8000/api/profile"; // Replace with your actual endpoint
           const responseGet = await fetch(apiUrlGet, {
             method: "GET",
             headers: {
-              "Content-Type": "application/json",
-              // Include any required headers (e.g., Authorization) here...
-              Authorization: `Bearer ${token}`, // Include the access token in the Authorization header
+              "Content-Type": "application/json;",
             },
           });
 

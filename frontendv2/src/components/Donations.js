@@ -1,20 +1,40 @@
 import { Grid, Button, Typography } from '@mui/material'
-import { donations } from '../mock/data'
 import { DonationItem } from './DonationItem'
+import { fetchDonationsAction, getDonations, getDonationsMessage, getDonationsStatus } from '../store/slices/donation'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import CircularProgress from '@mui/material/CircularProgress';
+
 export const Donations = () => {
+    const dispatch = useDispatch()
+    const donations = useSelector(getDonations)
+    const donationsStatus = useSelector(getDonationsStatus)
+    const donationsMessage = useSelector(getDonationsMessage)
+
+    useEffect(() => {
+        dispatch(fetchDonationsAction())
+    }, [])
+
     return (
         <Grid container>
-            <Grid container alignItems="center">
-                <Grid item xs={6}>
-                    <Typography variant="subtitle">Donations</Typography>
+            {donationsStatus === 'success' ?
+            (donations.length > 0 ?
+                (<>
+                    <Grid container spacing={2}>
+                        {donations.map((donation, index) => 
+                        <Grid item key={donation.id} xs={3} sx={{mb: 2}}>
+                            <DonationItem data={donation}/>
+                        </Grid>)}
+                    </Grid>
+                </>)
+                :
+                <Grid container alignItems="center" justifyContent="center" sx={{height: '100%'}}>
+                    <Typography variant='h3'>No donations available</Typography>
                 </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-                {donations.map((donation, index) => 
-                <Grid key={index} xs={3}>
-                    <DonationItem data={donation}/>
-                </Grid>)}
-            </Grid>
+            )
+            :
+            (<CircularProgress/>)
+            } 
         </Grid>
     )
 }
