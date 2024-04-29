@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logoImage from "../assets/images/home.png";
 import { FaUserAlt } from "react-icons/fa";
+import AddIcon from "@mui/icons-material/Add";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import ChatIcon from "@mui/icons-material/Chat";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CloseIcon from "@mui/icons-material/Close";
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
   IoIosAddCircleOutline,
   IoIosArrowDown,
@@ -112,13 +118,13 @@ const NavBar = () => {
             style={{ width: "55px", height: "auto" }}
           />
         </div>
-        <Link to="/" className="nav-logo">
+        <Link to="/landingpage" className="nav-logo">
           Donate What Where
         </Link>
 
         <div className="nav-links">
-          <Link className="nav-item" to="/login">
-            Features
+          <Link className="nav-item" to="/">
+            My Donations
           </Link>
 
           <div

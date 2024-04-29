@@ -1,0 +1,47 @@
+/* ChatList.css */
+.main-chat {
+  width: 100%;
+  margin: 20px auto;
+}
+
+.main-chat-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.chat-heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.chat-list {
+  list-style-type: none;
+  padding: 20px;
+  background-color: #edd2cb;
+  border: 2px solid #543c52;
+  border-radius: 20px;
+  text-decoration: none;
+}
+
+.chat-item {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.chat-sender {
+  font-weight: bold;
+}
+
+.chat-message {
+  margin-top: 5px;
+}
+
+.chat-link {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent */
+}
