@@ -19,9 +19,11 @@ const NavBar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isHelpDropdownOpen, setHelpDropdownOpen] = useState(false);
   const [isRideDropdownOpen, setRideDropdownOpen] = useState(false);
+  const [isEventDropdownOpen, setEventDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const ridedropdownRef = useRef(null);
   const helpdropdownRef = useRef(null);
+  const eventdropdownRef = useRef(null);
   const navigate = useNavigate();
   // Retrieve data from sessionStorage
   const userDataString = sessionStorage.getItem("userData");
@@ -62,14 +64,16 @@ const NavBar = () => {
     }
   };
 
-  const handleRideDropdownToggle = (event) => {
+  const handleEventDropdownToggle = (event) => {
     event.stopPropagation();
-    console.log("Before", isRideDropdownOpen);
-    setRideDropdownOpen((prevState) => !prevState);
+    console.log("Before", isHelpDropdownOpen);
+    setEventDropdownOpen((prevState) => !prevState);
     if (isHelpDropdownOpen) {
       setHelpDropdownOpen((prevState) => !prevState);
     }
-
+    if (isRideDropdownOpen) {
+      setRideDropdownOpen((prevState) => !prevState);
+    }
     if (isDropdownOpen) {
       setDropdownOpen((prevState) => !prevState);
     }
@@ -159,6 +163,32 @@ const NavBar = () => {
               </div>
             )}
           </div>
+
+          <div
+            className="nav-item help-dropdown"
+            onClick={handleEventDropdownToggle}
+            ref={eventdropdownRef}
+          >
+            Event <IoIosArrowDown style={{ paddingLeft: "5px" }} />
+            {isEventDropdownOpen && (
+              <div className="submenu">
+                <Link
+                  to="/createevent"
+                  className="submenu-item"
+                  onClick={(event) => handleEventDropdownToggle(event)}
+                >
+                  Create Event
+                </Link>
+                <Link
+                  to="/listevent"
+                  className="submenu-item"
+                  onClick={(event) => handleEventDropdownToggle(event)}
+                >
+                  List Event
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
         <div className="nav-user" ref={dropdownRef}>
           <div
@@ -213,14 +243,14 @@ const NavBar = () => {
                   <Link
                     to="/login"
                     className="dropdown-item"
-                    onClick={(event) => handleDropdownToggle(event)}
+                    onClick={(event) => handleEventDropdownToggle(event)}
                   >
                     Log in <IoIosArrowForward style={{ paddingLeft: "45px" }} />
                   </Link>
                   <Link
                     to="/option"
                     className="dropdown-item"
-                    onClick={(event) => handleDropdownToggle(event)}
+                    onClick={(event) => handleEventDropdownToggle(event)}
                   >
                     Sign up{" "}
                     <IoIosArrowForward style={{ paddingLeft: "35px" }} />
