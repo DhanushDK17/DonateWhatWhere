@@ -40,10 +40,12 @@ export function Header() {
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
+    navigate("/userprofile");
   };
 
   const handleAdminMenuClose = () => {
     setProfileMenuAnchor(null);
+    navigate("/");
   };
 
   const handleClickCreate = () => {
@@ -55,7 +57,7 @@ export function Header() {
   };
 
   const navigateToChats = () => {
-    navigate("/chats");
+    navigate("/chatlist");
   };
 
   const navigateToClaims = () => {

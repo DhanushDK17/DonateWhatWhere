@@ -95,7 +95,6 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile-container">
-      <NavBar />
       <div className="user-profile">
         <div className="cover-photo">
           <img

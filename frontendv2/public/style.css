@@ -56,7 +56,6 @@ button:hover {
 
 .main-login-register {
   background-color: #f1e8e6;
-  height: 100%;
 }
 
 .login-register-title {
@@ -157,7 +156,7 @@ button:hover {
 .hero {
   background-color: #edd2cb; /* Maroon */
   color: #361d32; /* Gold */
-  padding: 60px 0;
+  padding: 10px 0;
   text-align: center;
   height: fit-content;
 }
@@ -335,13 +334,13 @@ button:hover {
 
 .user-profile-icon {
   font-size: 24px;
-  background-color: #e7f7fe; /* Gold background */
+  background-color: #e7f7fe;
   border-radius: 50%;
   padding: 5px 10px;
 }
 
 .user-profile-container {
-  padding: 80px;
+  padding: 20px;
 }
 
 .nav-user {
@@ -402,7 +401,7 @@ button:hover {
   font-family: "Poppins", sans-serif;
   display: flex;
   flex-direction: column;
-  padding-top: 100px;
+  padding-top: 20px;
   background-color: #f1e8e6;
   height: auto;
   align-items: center;
@@ -454,7 +453,7 @@ button:hover {
 
 /* FAQ */
 .faq-container {
-  padding-top: 80px;
+  padding-top: 20px;
   height: 100%;
 }
 .faq {
@@ -704,4 +703,11 @@ button:hover {
   font-family: "Poppins", sans-serif;
   width: 95%;
   margin-bottom: 25px;
+}
+
+/*Chat*/
+.chat-profile-pic {
+  width: 100px; /* Size of the profile picture */
+  height: 100px; /* Size of the profile picture */
+  border-radius: 50%;
 }

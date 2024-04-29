@@ -102,7 +102,6 @@ const Login = () => {
 
   return (
     <div className="main-login-register">
-      <NavBar />
       <section className="login-container">
         <div className="statistics">
           <div className="stat-item">

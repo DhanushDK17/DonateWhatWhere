@@ -2,22 +2,22 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   const [initiator, setInitiator] = useState({});
   const [receiver, setReceiver] = useState({});
   const [error, setError] = useState(null);
   const { conversation_id } = useParams();
-
+  const [receiverName, setReceiverName] = useState("");
+  const location = useLocation();
+  const personDetails = location.state ? location.state.person : null;
   // Define fetchMessages function
   const fetchMessages = async () => {
     try {
       const access = JSON.parse(sessionStorage.getItem("access"));
-      const user = JSON.parse(sessionStorage.getItem("userData"));
-      setUserData(user);
       const response = await fetch(
         `http://localhost:8000/api/message/${conversation_id}`,
         {
@@ -37,13 +37,22 @@ const ChatComponent = () => {
       setInitiator(data.initiator);
       setReceiver(data.receiver);
       setMessages(formattedMessages);
+      console.log("userData", userData);
+      console.log("initiator", initiator);
+
+      console.log("receiverName", receiverName);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
   useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem("userData"));
+    console.log("User", user);
+    setUserData(user);
     fetchMessages();
+    // const intervalId = setInterval(fetchMessages, 3000);
+    // return () => clearInterval(intervalId);
   }, []);
 
   const sendMessage = async (messageText) => {
@@ -70,9 +79,12 @@ const ChatComponent = () => {
             },
           }
         );
-        if (response.ok) {
+        //Uncomment these lines
+        /*
+        setTimeout(() => {
           fetchMessages();
-        }
+        }, 10000);
+       */
         // Do something with the response if needed
       } catch (error) {
         console.error("Error sending message:", error);
@@ -93,6 +105,16 @@ const ChatComponent = () => {
   return (
     <div className="chat">
       <div className="chat-container">
+        <div
+          style={{
+            backgroundColor: "#f55951",
+            color: "#fff",
+            padding: "20px",
+            border: "1.5px solid #ccc",
+          }}
+        >
+          {personDetails?.first_name}
+        </div>
         <MessageList messages={messages} currentUserId={userData.id} />
         <ChatInput onSend={sendMessage} />
       </div>

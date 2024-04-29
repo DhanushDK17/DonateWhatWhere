@@ -8,7 +8,6 @@ export const MainLayout = () => {
       <Container
         maxWidth="xl"
         sx={{
-          height: "calc(100%)",
           overflowY: "auto",
         }}
       >
