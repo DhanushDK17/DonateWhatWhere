@@ -1,173 +1,205 @@
-import { Dialog, DialogTitle, DialogActions, DialogContent, Stack, Grid, Popper, Button, Collapse, IconButton, Typography, Card, CardActions, CardContent, CardHeader, CardMedia, DialogContentText } from '@mui/material'
-import { red } from '@mui/material/colors';
-import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
-import { useState, useRef } from 'react';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-import Paper from '@mui/material/Paper';
-import DeleteIcon from '@mui/icons-material/Delete';
-import LoadingButton from '@mui/lab/LoadingButton';
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Stack,
+  Grid,
+  Popper,
+  Button,
+  Collapse,
+  IconButton,
+  Typography,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  DialogContentText,
+} from "@mui/material";
+import { red } from "@mui/material/colors";
+import Avatar from "@mui/material/Avatar";
+import { styled } from "@mui/material/styles";
+import { useState, useRef } from "react";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import Paper from "@mui/material/Paper";
+import DeleteIcon from "@mui/icons-material/Delete";
+import LoadingButton from "@mui/lab/LoadingButton";
 
-
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Grow from '@mui/material/Grow';
-import { claimDonation, deleteDonation } from '../../api/donations';
-import { fetchDonationsAction } from '../../store/slices/donation';
-import { useDispatch } from 'react-redux';
-
+import ShareIcon from "@mui/icons-material/Share";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Grow from "@mui/material/Grow";
+import { claimDonation, deleteDonation } from "../../api/donations";
+import { fetchDonationsAction } from "../../store/slices/donation";
+import { useDispatch } from "react-redux";
 
 export const DonationItem = ({ data }) => {
-    const [expanded, setExpanded] = useState(false);
-    const [showOptions, setShowOptions] = useState(false)
-    const moreRef = useRef()
-    const dispatch = useDispatch()
-    const [dialogTitle, setDialogTitle] = useState("Claim Donation")
-    const [dialogText, setDialogText] = useState("")
-    const [showConfirmation, setShowConfirmation] = useState(false)
-    const [claimLoading, setClaimLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const moreRef = useRef();
+  const dispatch = useDispatch();
+  const [dialogTitle, setDialogTitle] = useState("Claim Donation");
+  const [dialogText, setDialogText] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [claimLoading, setClaimLoading] = useState(false);
 
-    const ExpandMore = styled((props) => {
-      const { expand, ...other } = props;
-      return <IconButton {...other} />;
-    })(({ theme, expand }) => ({
-      transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-      marginLeft: 'auto',
-      transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-      }),
-    }));
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
 
-    const handleClose = () => {
-        setShowOptions(false)
-    }
+  const handleClose = () => {
+    setShowOptions(false);
+  };
 
-    const handleDeleteDonation = () => {
-      setShowConfirmation(true)
-      setDialogText('Are you sure about deleting this donation?')
-      setDialogTitle('Delete donation')
-    }
+  const handleDeleteDonation = () => {
+    setShowConfirmation(true);
+    setDialogText("Are you sure about deleting this donation?");
+    setDialogTitle("Delete donation");
+  };
 
-    const handleConfirmClaim = () => {
-      setClaimLoading(true)
-      if (dialogTitle === 'Delete donation') {
-        deleteDonation(data.id)
+  const handleConfirmClaim = () => {
+    setClaimLoading(true);
+    if (dialogTitle === "Delete donation") {
+      deleteDonation(data.id)
         .then(() => {
-          handleCloseClaimDonation()
-          dispatch(fetchDonationsAction())
+          handleCloseClaimDonation();
+          dispatch(fetchDonationsAction());
         })
-        .catch(error => console.error(error.message))
-        .finally(() => setClaimLoading(false))
-      } else {
-        claimDonation(data.id)
+        .catch((error) => console.error(error.message))
+        .finally(() => setClaimLoading(false));
+    } else {
+      claimDonation(data.id)
         .then(() => handleCloseClaimDonation())
-        .catch(error => console.error(error.message))
-        .finally(() => setClaimLoading(false))
-      }
+        .catch((error) => console.error(error.message))
+        .finally(() => setClaimLoading(false));
     }
+  };
 
-    const handleCloseClaimDonation = () => {
-      setShowConfirmation(false)
-    }
+  const handleCloseClaimDonation = () => {
+    setShowConfirmation(false);
+  };
 
-    const handleClaimDonation = () => {
-      setShowConfirmation(true)
-      setDialogText('Are you sure about claiming this donation?')
-      setDialogTitle('Claim donation')
-    }
+  const handleClaimDonation = () => {
+    setShowConfirmation(true);
+    setDialogText("Are you sure about claiming this donation?");
+    setDialogTitle("Claim donation");
+  };
 
-    return (
-      <>
-        <Dialog
-          fullWidth
-          open={showConfirmation}
-          
-        >
-          <DialogTitle sx={{backgroundColor: 'primary.main', py: 1}}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{color: 'white'}}>
-              <Typography variant="h6" color="text.navbar" >{ dialogTitle }</Typography>
-            </Stack>
-          </DialogTitle>
-          <DialogContent sx={{pt: "20px !important", pb: 0}}>
-            <DialogContentText>
-              { dialogText }
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={handleCloseClaimDonation}>No</Button>
-            <LoadingButton variant="contained" sx={{backgroundColor: "primary.main"}} loading={claimLoading} onClick={handleConfirmClaim}>Create</LoadingButton>
-          </DialogActions>
-        </Dialog>
-        <Card sx={{ maxWidth: 345 }}>
-          <CardHeader
-            style={{color: "black"}}
-            action={
-            <IconButton ref={moreRef} onClick={() => setShowOptions(true)} aria-label="settings">
-                <MoreVertIcon />
+  return (
+    <>
+      <Dialog fullWidth open={showConfirmation}>
+        <DialogTitle sx={{ backgroundColor: "primary.main", py: 1 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ color: "white" }}
+          >
+            <Typography variant="h6" color="text.navbar">
+              {dialogTitle}
+            </Typography>
+          </Stack>
+        </DialogTitle>
+        <DialogContent sx={{ pt: "20px !important", pb: 0 }}>
+          <DialogContentText>{dialogText}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleCloseClaimDonation}>
+            No
+          </Button>
+          <LoadingButton
+            variant="contained"
+            sx={{ backgroundColor: "primary.main" }}
+            loading={claimLoading}
+            onClick={handleConfirmClaim}
+          >
+            Create
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
+      <Card
+        sx={{ maxWidth: 345, border: "1.5px solid #ccc", cursor: "pointer" }}
+      >
+        <CardHeader
+          style={{ color: "#361d32" }}
+          action={
+            <IconButton
+              ref={moreRef}
+              onClick={() => setShowOptions(true)}
+              aria-label="settings"
+            >
+              <MoreVertIcon />
             </IconButton>
-            }
-            title={data.item}
-            subheader={data.category}
-          />
-          <CardMedia
-              component="img"
-              height="194"
-              style={{color: "black"}}
-              image="https://picsum.photos/200?random=0"
-              alt={data.item}
-          />
-          <CardContent>
-              <Typography variant="body2" color="text.secondary">
-              {data.category}
-              </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
-              <HandshakeIcon color='success' />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
-            <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
-              <DeleteIcon color='error' />
-            </IconButton>
-            <Popper
-                open={showOptions}
-                anchorEl={moreRef.current}
-                role={undefined}
-                placement="bottom-start"
-                transition
-                disablePortal
-                >
-                {({ TransitionProps, placement }) => (
-                    <Grow
-                    {...TransitionProps}
-                    style={{
-                        transformOrigin:
-                        placement === 'bottom-start' ? 'left top' : 'left bottom',
-                    }}
+          }
+          title={data.item}
+          subheader={data.category}
+        />
+        <CardMedia
+          component="img"
+          height="194"
+          style={{ color: "black" }}
+          image="https://picsum.photos/200?random=0"
+          alt={data.item}
+        />
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {data.category}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
+            <HandshakeIcon color="success" />
+          </IconButton>
+          <IconButton aria-label="share">
+            <ShareIcon />
+          </IconButton>
+          <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
+            <DeleteIcon color="error" />
+          </IconButton>
+          <Popper
+            open={showOptions}
+            anchorEl={moreRef.current}
+            role={undefined}
+            placement="bottom-start"
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "bottom-start" ? "left top" : "left bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={showOptions}
+                      id="composition-menu"
+                      aria-labelledby="composition-button"
                     >
-                    <Paper>
-                        <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList
-                            autoFocusItem={showOptions}
-                            id="composition-menu"
-                            aria-labelledby="composition-button"
-                        >
-                            <MenuItem onClick={handleClose}>Report</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                            <MenuItem onClick={handleClose}>Logout</MenuItem>
-                        </MenuList>
-                        </ClickAwayListener>
-                    </Paper>
-                    </Grow>
-                )}
-            </Popper>
-          </CardActions>
-          {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
+                      <MenuItem onClick={handleClose}>Report</MenuItem>
+                      <MenuItem onClick={handleClose}>My account</MenuItem>
+                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        </CardActions>
+        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <Typography paragraph>Method:</Typography>
               <Typography paragraph>
@@ -196,7 +228,7 @@ export const DonationItem = ({ data }) => {
               </Typography>
             </CardContent>
           </Collapse> */}
-        </Card>
-      </>
-      );
-}
+      </Card>
+    </>
+  );
+};
