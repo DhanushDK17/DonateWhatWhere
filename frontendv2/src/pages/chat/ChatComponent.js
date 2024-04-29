@@ -2,66 +2,40 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
+import { useParams } from "react-router-dom";
 
-//const ChatComponent = ({selectedRide}) => {
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [initiator, setInitiator] = useState({});
+  const [receiver, setReceiver] = useState({});
   const [error, setError] = useState(null);
+  const { conversation_id } = useParams();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        //   //You can uncomment these lines
-        //   const access = JSON.parse(sessionStorage.getItem("access"));
-        //   const response = await fetch("http://127.0.0.1:8000/api/profile", {
-        //     headers: {
-        //       Authorization: `Bearer ${access}`,
-        //       "Content-Type": "application/json",
-        //     },
-        //   });
-
-        /* you can commented out these lines to... */
-        const response = await fetch(
-          "https://run.mocky.io/v3/d80c60c3-7f40-44f4-bace-31eaeada02ad"
-        );
-        /*...here*/
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setUserData(data);
-      } catch (e) {
-        setError(e.message);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  //const fetchMessages = async (selectedRide) => {
+  // Define fetchMessages function
   const fetchMessages = async () => {
     try {
-      // const access = JSON.parse(sessionStorage.getItem("access"));
-      // const response = await fetch(
-      //   `http://127.0.0.1:8000/api/ride/${selectedRide.id}/message`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${access}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      const response = await axios.get(
-        "https://run.mocky.io/v3/78dacaf3-1c32-4363-9808-89ce24338a55"
+      const access = JSON.parse(sessionStorage.getItem("access"));
+      const user = JSON.parse(sessionStorage.getItem("userData"));
+      setUserData(user);
+      const response = await fetch(
+        `http://localhost:8000/api/message/${conversation_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
-      const formattedMessages = response.data.map((msg) => ({
-        senderId: msg.sender.id,
-        senderName: msg.sender.name,
-        text: msg.message,
+      const data = await response.json();
+      console.log("Response", data);
+      const formattedMessages = data.message_set.map((msg) => ({
+        senderId: msg.sender,
+        text: msg.text,
         timestamp: msg.timestamp,
       }));
+      setInitiator(data.initiator);
+      setReceiver(data.receiver);
       setMessages(formattedMessages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -69,43 +43,37 @@ const ChatComponent = () => {
   };
 
   useEffect(() => {
-    // fetchMessages(selectedRide);
     fetchMessages();
-    const intervalId = setInterval(fetchMessages, 5000);
-    return () => clearInterval(intervalId);
   }, []);
 
   const sendMessage = async (messageText) => {
+    const email =
+      userData.id === initiator.id ? receiver.email : initiator.email;
+    console.log("Receiver email", email);
+
     if (userData) {
       const newMessage = {
-        senderId: userData.id,
-        senderName: userData.name, // assuming userData contains the user's name
+        receiver: email,
         text: messageText,
-        timestamp: new Date().toISOString(),
+        conversation_id: conversation_id,
       };
 
       try {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-        console.log(messageText);
-
-        await axios.post(
-          //`http://127.0.0.1:8000/api/ride/${selectedRide.id}/message`,
-          "https://run.mocky.io/v3/78dacaf3-1c32-4363-9808-89ce24338a55",
-          // {
-          //   message: messageText,
-          // }
-          newMessage
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${access}`,
-          //     "Content-Type": "application/json",
-          //   },
-          // }
+        const access = JSON.parse(sessionStorage.getItem("access"));
+        const response = await axios.post(
+          "http://localhost:8000/api/conversation",
+          newMessage, // Pass the request body directly here
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+              "Content-Type": "application/json",
+            },
+          }
         );
-        setTimeout(() => {
+        if (response.ok) {
           fetchMessages();
-        }, 10000);
+        }
+        // Do something with the response if needed
       } catch (error) {
         console.error("Error sending message:", error);
       }

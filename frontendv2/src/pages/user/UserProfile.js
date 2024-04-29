@@ -49,9 +49,6 @@ const UserProfile = () => {
 
       const formData = new FormData();
       formData.append("address", userInfo.address);
-      if (photo) {
-        formData.append("profile_photo_base64", photo);
-      }
 
       const response = await fetch("http://localhost:8000/api/profile", {
         method: "PATCH",
@@ -63,6 +60,29 @@ const UserProfile = () => {
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
+      } else {
+        try {
+          if (photo) {
+            const formDataImage = new FormData();
+            formDataImage.append("profile_photo", photo);
+            const image_response = await fetch(
+              "http://localhost:8000/api/image",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${access}`,
+                },
+                body: formDataImage,
+              }
+            );
+
+            if (!image_response.ok) {
+              throw new Error("Network response was not ok");
+            }
+          }
+        } catch (e) {
+          console.error("Failed to save photo:", error);
+        }
       }
 
       const updatedData = await response.json();
