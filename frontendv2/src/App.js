@@ -17,6 +17,8 @@ import { Chats } from "./pages/Chats";
 import { ClaimsPage } from "./pages/Claims";
 import ChatList from "./pages/chat/ChatList";
 import ChatComponent from "./pages/chat/ChatComponent";
+import CreateEvent from "./pages/event/CreateEvent";
+import ListEvent from "./pages/event/ListEvent";
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
           <Route path="/claimsv2" element={<ClaimsPage />} />
           <Route path="/chatlist" element={<ChatList />} />
           <Route path="/chat/:conversation_id" element={<ChatComponent />} />
+          <Route path="/createevent" element={<CreateEvent />} />
+          <Route path="/listevent" element={<ListEvent />} />
         </Route>
       </Routes>
     </Router>
