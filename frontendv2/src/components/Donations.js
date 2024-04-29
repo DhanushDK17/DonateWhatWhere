@@ -22,7 +22,7 @@ export const Donations = () => {
   }, []);
 
   return (
-    <Grid container>
+    <Grid container className="user-profile-container">
       {donationsStatus === "success" ? (
         donations.length > 0 ? (
           <>

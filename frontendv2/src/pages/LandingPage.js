@@ -13,7 +13,6 @@ const LandingPage = () => {
 
   return (
     <div className="content-wrapper">
-      <NavBar />
       <section className="hero">
         <div className="statistics">
           <div className="stat-item">

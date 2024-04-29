@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./ChatList.css";
+import default_profile_photo from "../../assets/images/profile.png";
+
 function ChatList() {
   const [conversations, setConversations] = useState([]);
   const [conversationMap, setConversationMap] = useState({});
@@ -78,13 +80,34 @@ function ChatList() {
           {Object.values(conversationMap).map((conversation, index) => (
             <li key={index} className="chat-item">
               <Link
-                to={`/chat/${conversation.conversation_id}`}
+                to={{
+                  pathname: `/chat/${conversation.conversation_id}`,
+                  state: { person: conversation.person2 },
+                }}
                 className="chat-link"
               >
-                <div className="chat-sender">
-                  {`${conversation.person2.first_name} ${conversation.person2.last_name}`}
+                <div
+                  className="chat-sender"
+                  style={{ display: "flex", flexDirection: "row" }}
+                >
+                  <img
+                    src={default_profile_photo}
+                    alt="Profile"
+                    className="chat-profile-pic"
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      padding: "15px",
+                    }}
+                  >
+                    {`${conversation.person2.first_name} ${conversation.person2.last_name}`}
+                    <div className="chat-message">
+                      {conversation.message.text}
+                    </div>
+                  </div>
                 </div>
-                <div className="chat-message">{conversation.message.text}</div>
               </Link>
             </li>
           ))}
