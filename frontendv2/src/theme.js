@@ -1,39 +1,39 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 export const productTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#f55951', // Navbar Color
+      main: "#f55951", // Navbar Color
     },
     secondary: {
-      main: '#F6F4F3', // Cards color
+      main: "#edd2cb", // Cards color
     },
-    divider: "#BDBDBD", //Divider lines in cards
+    divider: "#00000", //Divider lines in cards
     success: {
-      main: '#4ddc8c',
+      main: "#4ddc8c",
     },
     info: {
-      main: '#597697',
+      main: "#543c52",
     },
     warning: {
-      main: '#597697',
+      main: "#543c52",
     },
     error: {
-      main: '#ff0000',
+      main: "#ff0000",
     },
     background: {
-      default: '#ffffff',
-      paper: '#ffffff',
+      default: "#fff",
+      paper: "#fff",
     },
     text: {
       navbar: "#FFFFFF", //includes text color for all dialog title and navbar
-      default: "#000000", //default text color is black
+      default: "#361d32", //default text color is black
     },
     icon: "#FFFFFF", //Icon color in dialog box title
   },
   typography: {
-    fontFamily: "Myriad Pro",
+    fontFamily: "Poppins",
     fontWeightLight: 400,
     fontSize: 16,
     htmlFontSize: 16,
@@ -66,7 +66,7 @@ export const productTheme = createTheme({
       lineHeight: 1,
     },
     h6: {
-      fontSize: 18,
+      fontSize: 24,
       fontWeight: 600,
       lineHeight: 1.6,
     },
@@ -94,18 +94,19 @@ export const productTheme = createTheme({
       fontSize: 14,
       fontWeight: 400,
       lineHeight: 1.4,
-      textTransform: "unset"
+      textTransform: "unset",
+      cursor: "pointer",
     },
   },
   components: {
     MuiTableRow: {
       styleOverrides: {
         root: {
-          '&.even-row': {
-            backgroundColor: '#ffffff',
+          "&.even-row": {
+            backgroundColor: "#ffffff",
           },
-          '&.odd-row': {
-            backgroundColor: '#f0f0f0',
+          "&.odd-row": {
+            backgroundColor: "#f0f0f0",
           },
         },
       },
@@ -113,44 +114,40 @@ export const productTheme = createTheme({
     MuiTablePagination: {
       styleOverrides: {
         toolbar: {
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0px 24px',
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "0px 24px",
         },
         selectLabel: {
           margin: 0,
-          padding: '8px 0',
-          lineHeight: '1.4375em',
+          padding: "8px 0",
+          lineHeight: "1.4375em",
         },
         displayedRows: {
           margin: 0,
-          padding: '8px 0',
-          lineHeight: '1.4375em',
+          padding: "8px 0",
+          lineHeight: "1.4375em",
         },
         select: {
           margin: 0,
-          padding: '8px 0',
-          lineHeight: '1.4375em',
+          padding: "8px 0",
+          lineHeight: "1.4375em",
         },
         actions: {
           margin: 0,
-          padding: '8px 0',
-          lineHeight: '1.4375em',
+          padding: "8px 0",
+          lineHeight: "1.4375em",
         },
       },
     },
     MuiToggleButtonGroup: {
       styleOverrides: {
         grouped: {
-          '&:not(:first-of-type)': {
-            
-            backgroundColor: '#c5d4e0',
-             
+          "&:not(:first-of-type)": {
+            backgroundColor: "#f55951",
           },
-          '&:first-of-type': {
-           
-            backgroundColor: "#597697",
-             
+          "&:first-of-type": {
+            backgroundColor: "#543c52",
           },
         },
       },
@@ -158,7 +155,7 @@ export const productTheme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         head: {
-          backgroundColor: "#F6F4F3",
+          backgroundColor: "#f55951",
           color: "#000000",
           fontSize: 16,
           fontWeight: 600,
@@ -168,17 +165,18 @@ export const productTheme = createTheme({
     },
   },
   background: {
-    header: "#597697",
-    footer: "#597697"
+    header: "#361d32",
+    footer: "#361d32",
   },
   breakpoints: {
-    values: { //min-width
+    values: {
+      //min-width
       xs: 0, //Mobiles
       sm: 600, //Small Tablet|Large Mobile
       md: 960, //Big Tablet
       lg: 1300, //Full HD
       xl: 2048, //2K
       xxl: 2560, //4K
-    }
-  }
+    },
+  },
 });
