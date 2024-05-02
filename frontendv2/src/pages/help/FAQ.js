@@ -29,7 +29,7 @@ const FAQ = () => {
 
   return (
     <div className="faq-container">
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="faq">
         <h2
           style={{

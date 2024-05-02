@@ -4,7 +4,7 @@ import { Header } from "../components/Header/Header";
 export const MainLayout = () => {
   return (
     <>
-      <Header />
+      <Header/>
       <Container
         maxWidth="xl"
         sx={{

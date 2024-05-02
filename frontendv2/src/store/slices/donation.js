@@ -37,8 +37,6 @@ const donationSlice = createSlice({
     })
     .addCase(deleteDonationAction.fulfilled, (state, action) => {
       if (!action?.payload.id) {
-          console.log("could not delete");
-          console.log(action.payload)
           return 
       }
       const { id } = action.payload;

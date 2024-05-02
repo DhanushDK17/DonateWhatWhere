@@ -4,10 +4,8 @@ import {
   DialogActions,
   DialogContent,
   Stack,
-  Grid,
   Popper,
   Button,
-  Collapse,
   IconButton,
   Typography,
   Card,
@@ -17,9 +15,6 @@ import {
   CardMedia,
   DialogContentText,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
-import Avatar from "@mui/material/Avatar";
-import { styled } from "@mui/material/styles";
 import { useState, useRef } from "react";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,28 +29,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Grow from "@mui/material/Grow";
 import { claimDonation, deleteDonation } from "../../api/donations";
 import { fetchDonationsAction } from "../../store/slices/donation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../../store/slices/user";
 
 export const DonationItem = ({ data }) => {
-  const [expanded, setExpanded] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const moreRef = useRef();
   const dispatch = useDispatch();
+  const user = useSelector(getUser)
   const [dialogTitle, setDialogTitle] = useState("Claim Donation");
   const [dialogText, setDialogText] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [claimLoading, setClaimLoading] = useState(false);
-
-  const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
 
   const handleClose = () => {
     setShowOptions(false);
@@ -73,13 +58,16 @@ export const DonationItem = ({ data }) => {
       deleteDonation(data.id)
         .then(() => {
           handleCloseClaimDonation();
-          dispatch(fetchDonationsAction());
+          dispatch(fetchDonationsAction({ is_claimed: false}));
         })
         .catch((error) => console.error(error.message))
         .finally(() => setClaimLoading(false));
     } else {
       claimDonation(data.id)
-        .then(() => handleCloseClaimDonation())
+        .then(() => {
+          dispatch(fetchDonationsAction({is_claimed: false}));
+          handleCloseClaimDonation()
+        })
         .catch((error) => console.error(error.message))
         .finally(() => setClaimLoading(false));
     }
@@ -148,25 +136,25 @@ export const DonationItem = ({ data }) => {
           component="img"
           height="194"
           style={{ color: "black" }}
-          image="https://picsum.photos/200?random=0"
+          image={`data:image/png;base64,${data.image_base64}`}
           alt={data.item}
         />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {data.category}
+            {data.description}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
+          {user.user_type === 'ORGANIZATION' && <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
             <HandshakeIcon color="success" />
-          </IconButton>
+          </IconButton>}
           <IconButton aria-label="share">
             <ShareIcon />
           </IconButton>
-          <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
+          {user.user_type === 'PERSONAL' && <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
             <DeleteIcon color="error" />
-          </IconButton>
-          <Popper
+          </IconButton>}
+          {/* <Popper
             open={showOptions}
             anchorEl={moreRef.current}
             role={undefined}
@@ -197,7 +185,7 @@ export const DonationItem = ({ data }) => {
                 </Paper>
               </Grow>
             )}
-          </Popper>
+          </Popper> */}
         </CardActions>
         {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>

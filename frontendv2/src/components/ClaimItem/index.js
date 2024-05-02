@@ -14,13 +14,19 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PlaceIcon from "@mui/icons-material/Place";
 import { startConversation } from "../../api/chat";
 import ChatIcon from "@mui/icons-material/Chat";
+import { deleteClaim } from "../../api/claims";
 
-export const ClaimItem = ({ claim }) => {
+export const ClaimItem = ({ claim, fetchClaims }) => {
   const handleChat = () => {
     startConversation({ text: "", receiver: claim.donation.donated_by.email })
       .then((response) => console.log(response))
       .catch((error) => console.error(error.message));
   };
+
+  const handleDeleteClaim = () => {
+    deleteClaim(claim.donation.id).then(() => fetchClaims())
+    .catch(error => console.error(error))
+  }
 
   return (
     <>
@@ -46,11 +52,10 @@ export const ClaimItem = ({ claim }) => {
           </Grid>
         </AccordionSummary>
         <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
+          {claim.donation.description}
         </AccordionDetails>
         <AccordionActions>
-          <Button size="small">Cancel</Button>
+          <Button size="small" onClick={handleDeleteClaim}>Cancel</Button>
           <IconButton color="primary.main" size="small" onClick={handleChat}>
             <ChatIcon />
           </IconButton>

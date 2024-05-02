@@ -23,7 +23,7 @@ const userSlice = createSlice({
   },
 });
 
-export const getUser = (state) => state.user;
+export const getUser = (state) => state.user.user;
 
 export const {setUserInfo,refreshAccessToken,resetUserData} = userSlice.actions;
 export default userSlice.reducer;

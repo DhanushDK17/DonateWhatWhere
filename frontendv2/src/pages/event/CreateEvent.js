@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar";
 import axios from "axios";
+import { createEvent } from "../../api/events";
+import { useNavigate } from "react-router";
 const CreateEvent = () => {
   const [eventData, setEventData] = useState({
     name: "",
     description: "",
     datetime: "",
   });
+
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setEventData({ ...eventData, [e.target.name]: e.target.value });
@@ -16,36 +20,18 @@ const CreateEvent = () => {
     setEventData({ ...eventData, datetime });
   };
 
-  const handleSubmit = async () => {
-    try {
-      const access = JSON.parse(sessionStorage.getItem("access"));
-      const response = await axios.post(
-        "http://localhost:8000/api/event",
-        eventData, // Pass the request body directly here
-        {
-          headers: {
-            Authorization: `Bearer ${access}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      alert("Event created successfully!!");
-    } catch (error) {
-      console.error("Error while creating event:", error);
-    }
+  const handleSubmit = () => {
+    createEvent(eventData)
+    .then(data => navigate('/events'))
+    .catch(error => console.error(error))
   };
 
   return (
     <div className="user-profile-container">
-      <NavBar />
       <div className="user-profile">
         <div>
           <h2>Create a Event</h2>
-          <form onSubmit={handleSubmit} className="login-form">
+          <form className="login-form">
             <div>
               <label>Name of the event:</label>
               <input
@@ -76,7 +62,7 @@ const CreateEvent = () => {
               />
             </div>
 
-            <button type="submit" className="submit-btn">
+            <button onClick={handleSubmit} className="submit-btn">
               Create Event
             </button>
           </form>

@@ -3,6 +3,7 @@ import { MdLogin } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "../NavBar";
 import dollar from "../../assets/images/dollar.png";
+import { Avatar } from "@mui/material";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -91,6 +92,9 @@ const Register = () => {
                 </h2>
                 <div style={{ textAlign: "center", fontSize: "14px" }}>
                   Every Donation Counts. Join Us!
+                </div>
+                <div style={{display: 'flex', justifyContent: 'center', marginTop: '10px', marginBottom: '10px'}}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{width: 90, height: 90, cursor: 'pointer'}} />
                 </div>
                 <input
                   type="text"
