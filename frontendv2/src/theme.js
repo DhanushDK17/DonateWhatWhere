@@ -4,14 +4,14 @@ export const productTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: '#361d32', // Navbar Color
+      main: "#f55951", // Navbar Color
     },
     secondary: {
       main: "#edd2cb", // Cards color
     },
     divider: "#00000", //Divider lines in cards
     success: {
-      main: "#4ddc8c",
+      main: "#f55951",
     },
     info: {
       main: "#543c52",

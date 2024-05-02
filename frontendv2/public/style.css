@@ -29,10 +29,6 @@ h1 {
   font-size: 18px;
 }
 
-button:hover {
-  background-color: #361d32;
-}
-
 .tag {
   background-color: white;
 }
@@ -535,7 +531,7 @@ button:hover {
   border: 1.5px solid #ccc;
   background-color: #fff;
   font-family: "Poppins", sans-serif;
-  width: 65vw;
+  width: 30vw;
 }
 
 .message-list {

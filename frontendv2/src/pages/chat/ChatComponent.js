@@ -11,7 +11,7 @@ const ChatComponent = ({ conversation }) => {
   const [initiator, setInitiator] = useState({});
   const [receiver, setReceiver] = useState({});
   const [error, setError] = useState(null);
-  const { conversation_id, person2 } = conversation;
+  const { conversation_id, person2, person1 } = conversation;
   const [receiverName, setReceiverName] = useState("");
   const location = useLocation();
   const personDetails = location.state ? location.state.person : null;
@@ -47,49 +47,52 @@ const ChatComponent = ({ conversation }) => {
         socket.current.disconnect();
       }
     };
-  }, [conversation_id]);
+  }, [conversation_id, person2]);
 
   const fetchMessages = async () => {
-    try {
-      const access = JSON.parse(sessionStorage.getItem("access"));
-      console.log("conversation_id", conversation_id);
-      console.log("person2", person2);
-      const response = await fetch(
-        `http://localhost:8000/api/message/${conversation_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${access}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      console.log("Response", data);
-      const formattedMessages = data.message_set.map((msg) => ({
-        senderId: msg.sender,
-        text: msg.text,
-        timestamp: msg.timestamp,
-      }));
-      setInitiator(data.initiator);
-      setReceiver(data.receiver);
-      setMessages(formattedMessages);
-      console.log("userData", userData);
-      console.log("initiator", initiator);
+    if (conversation_id) {
+      try {
+        const access = JSON.parse(sessionStorage.getItem("access"));
+        console.log("conversation_id", conversation_id);
+        console.log("person2", person2);
+        const response = await fetch(
+          `http://localhost:8000/api/message/${conversation_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${access}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        console.log("Response", data);
+        const formattedMessages = data.message_set.map((msg) => ({
+          senderId: msg.sender,
+          text: msg.text,
+          timestamp: msg.timestamp,
+        }));
+        setInitiator(data.initiator);
+        setReceiver(data.receiver);
+        setMessages(formattedMessages);
+        console.log("userData", userData);
+        console.log("initiator", initiator);
 
-      console.log("receiverName", receiverName);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
+        console.log("receiverName", receiverName);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    } else {
+      setMessages([]);
     }
   };
 
   const sendMessage = async (messageText) => {
-    const email =
-      userData.id === initiator.id ? receiver.email : initiator.email;
-    console.log("Receiver email", email);
-
     if (userData) {
       let newMessage = {}; // Changed from const to let
+
       if (conversation_id) {
+        const email =
+          person1.id === initiator.id ? receiver.email : initiator.email;
         newMessage = {
           receiver: email,
           text: messageText,
@@ -97,11 +100,11 @@ const ChatComponent = ({ conversation }) => {
         };
       } else {
         newMessage = {
-          receiver: email,
+          receiver: person2.email,
           text: messageText,
         };
       }
-
+      console.log("Send Message newMessage", newMessage);
       try {
         const access = JSON.parse(sessionStorage.getItem("access"));
         const response = await axios.post(
@@ -148,7 +151,7 @@ const ChatComponent = ({ conversation }) => {
             border: "1.5px solid #ccc",
           }}
         >
-          {person2.first_name + " " + person2.last_name}
+          {person2?.first_name + " " + person2?.last_name}
         </div>
         <MessageList messages={messages} currentUserId={userData.id} />
         <ChatInput onSend={sendMessage} />

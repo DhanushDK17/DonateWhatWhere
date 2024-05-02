@@ -45,3 +45,12 @@
   text-decoration: none; /* Remove underline */
   color: inherit; /* Inherit color from parent */
 }
+
+.no-chats-message {
+  font-size: 2rem;
+  color: #361d32;
+  text-align: center;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+}

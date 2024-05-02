@@ -3,11 +3,53 @@ import ChatComponent from "./ChatComponent";
 import "./ChatList.css";
 import default_profile_photo from "../../assets/images/profile.png";
 import home from "../../assets/images/home.png";
+import ChatIcon from "@mui/icons-material/Chat";
+import ChatList from "../chat/ChatList";
+import "../user/Claims.css";
 
-function ChatList() {
+const DonationCard = ({ donation }) => {
+  const { item, category, donated_by } = donation;
+
+  return (
+    <div className="card">
+      <h3>{item}</h3>
+      <p className="text">Category: {category}</p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <p className="text">
+          Donated By: {donated_by.first_name} {donated_by.last_name}
+        </p>
+        <ChatIcon style={{ padding: "7px" }} />
+      </div>
+
+      <p className="text">Email: {donated_by.email}</p>
+    </div>
+  );
+};
+
+const DonationList = ({ donations }) => {
+  return (
+    <div className="donation-list">
+      {donations &&
+        donations.map((donation, index) => (
+          <DonationCard key={index} donation={donation.donation} />
+        ))}
+    </div>
+  );
+};
+
+function ChatMessaging() {
   const [conversations, setConversations] = useState([]);
   const [conversationMap, setConversationMap] = useState({});
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [claims, setClaims] = useState({});
+  const [showChatList, setShowChatList] = useState(false);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -133,4 +175,4 @@ function ChatList() {
   );
 }
 
-export default ChatList;
+export default ChatMessaging;
