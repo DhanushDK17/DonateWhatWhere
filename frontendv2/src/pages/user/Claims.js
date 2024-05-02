@@ -21,7 +21,6 @@ import PlaceIcon from "@mui/icons-material/Place";
 
 const Claims = () => {
   const [claims, setClaims] = useState({});
-  const [showChatList, setShowChatList] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [conversationMap, setConversationMap] = useState({});
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -118,7 +117,7 @@ const Claims = () => {
     };
 
     fetchData();
-  }, []);
+  }, [claims]);
 
   const handleChatIconClick = (donation) => {
     setSelectedDonation(donation);
@@ -137,6 +136,48 @@ const Claims = () => {
     }
     setSelectedConversation(conversation);
     setShowChatComponent(true);
+  };
+
+  const handleCancel = async (donation) => {
+    try {
+      const access = JSON.parse(sessionStorage.getItem("access"));
+      const response = await fetch(
+        `http://localhost:8000/api/donation/${donation.donation.id}/claim`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${access}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Request was successful
+        console.log("DELETE request successful");
+        setClaims((prevClaims) => {
+          return {
+            ...prevClaims,
+            results: prevClaims.results.filter(
+              (claim) => claim.donation.id !== donation.donation.id
+            ),
+          };
+        });
+        // Optionally, perform any additional actions upon successful deletion
+      } else {
+        // Request failed
+        console.error(
+          "Failed to delete resource. Server returned:",
+          response.status,
+          response.statusText
+        );
+        // Optionally, handle error scenarios
+      }
+    } catch (error) {
+      // An error occurred during the request
+      console.error("Error handling DELETE request:", error);
+      // Optionally, handle error scenarios
+    }
   };
 
   return (
@@ -191,7 +232,12 @@ const Claims = () => {
                         </Grid>
                       </AccordionSummary>
                       <AccordionActions>
-                        <Button size="small">Cancel</Button>
+                        <Button
+                          size="small"
+                          onClick={() => handleCancel(donation)}
+                        >
+                          Cancel
+                        </Button>
                         <IconButton
                           color="primary.main"
                           size="small"
