@@ -227,13 +227,13 @@ export function Header() {
                   >
                     Donate What Where
                   </Typography>
-                  <Typography
+                  {/*   <Typography
                     variant="body"
                     sx={{ color: "text.navbar", ml: 2 }}
                   >
                     {user.email}
                     {user.user_type}
-                  </Typography>
+                  </Typography>*/}
                 </Button>
               </Grid>
             </Stack>
@@ -462,7 +462,7 @@ export function Header() {
             loading={createLoading}
             onClick={handleCreate}
           >
-            Create
+            Proceed
           </LoadingButton>
         </DialogActions>
       </Dialog>

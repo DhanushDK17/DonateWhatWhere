@@ -32,7 +32,7 @@ function ChatList() {
               const { initiator, receiver, last_message } = conversation;
               if (last_message) {
                 // Check if last_message is not undefined
-                const person1Id = userData.id;
+                const person1Id = userData?.id;
                 const person2Id =
                   userData.id !== initiator.id ? initiator.id : receiver.id;
                 const key = [person1Id, person2Id].join("_");
@@ -44,9 +44,9 @@ function ChatList() {
                 ) {
                   newConversationMap[key] = {
                     person1:
-                      userData.id === initiator.id ? initiator : receiver,
+                      userData?.id === initiator.id ? initiator : receiver,
                     person2:
-                      userData.id !== initiator.id ? initiator : receiver,
+                      userData?.id !== initiator.id ? initiator : receiver,
                     message: last_message,
                     conversation_id: conversation.id,
                   };
