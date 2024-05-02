@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import ChatComponent from "./ChatComponent";
 import "./ChatList.css";
 import default_profile_photo from "../../assets/images/profile.png";
 
 function ChatList() {
   const [conversations, setConversations] = useState([]);
   const [conversationMap, setConversationMap] = useState({});
+  const [selectedConversation, setSelectedConversation] = useState(null);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -72,46 +73,51 @@ function ChatList() {
     fetchConversations();
   }, []);
 
+  const handleConversationClick = (conversationId) => {
+    console.log("chat list conversationId", conversationId);
+    setSelectedConversation(conversationId);
+  };
+
   return (
     <div className="main-chat">
-      <div className="main-chat-container">
-        <h2 className="chat-heading">Chats</h2>
+      <div className="chat-list-container">
         <ul className="chat-list">
           {Object.values(conversationMap).map((conversation, index) => (
-            <li key={index} className="chat-item">
-              <Link
-                to={{
-                  pathname: `/chat/${conversation.conversation_id}`,
-                  state: { person: conversation.person2 },
-                }}
-                className="chat-link"
+            <li
+              key={index}
+              className="chat-item"
+              onClick={() => handleConversationClick(conversation)}
+            >
+              <div
+                className="chat-sender"
+                style={{ display: "flex", flexDirection: "row" }}
               >
+                <img
+                  src={default_profile_photo}
+                  alt="Profile"
+                  className="chat-profile-pic"
+                />
                 <div
-                  className="chat-sender"
-                  style={{ display: "flex", flexDirection: "row" }}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "15px",
+                  }}
                 >
-                  <img
-                    src={default_profile_photo}
-                    alt="Profile"
-                    className="chat-profile-pic"
-                  />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      padding: "15px",
-                    }}
-                  >
-                    {`${conversation.person2.first_name} ${conversation.person2.last_name}`}
-                    <div className="chat-message">
-                      {conversation.message.text}
-                    </div>
+                  {`${conversation.person2.first_name} ${conversation.person2.last_name}`}
+                  <div className="chat-message">
+                    {conversation.message.text}
                   </div>
                 </div>
-              </Link>
+              </div>
             </li>
           ))}
         </ul>
+      </div>
+      <div className="chat-component-container">
+        {selectedConversation && (
+          <ChatComponent conversation={selectedConversation} />
+        )}
       </div>
     </div>
   );

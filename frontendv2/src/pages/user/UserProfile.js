@@ -7,6 +7,7 @@ const UserProfile = () => {
   const [error, setError] = useState(null);
   const [userInfo, setUserInfo] = useState({});
   const [photo, setPhoto] = useState(null);
+  const [profilephoto, setProfilePhoto] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -15,7 +16,6 @@ const UserProfile = () => {
         const response = await fetch("http://localhost:8000/api/profile", {
           headers: {
             Authorization: `Bearer ${access}`,
-            "Content-Type": "application/json",
           },
         });
 
@@ -25,6 +25,8 @@ const UserProfile = () => {
 
         const data = await response.json();
         setUserInfo(data);
+        console.log("data.profile_photo_base64", data.profile_photo_base64);
+        setProfilePhoto("data:image/png;base64," + data.profile_photo_base64);
       } catch (e) {
         setError(e.message);
       }
@@ -104,7 +106,7 @@ const UserProfile = () => {
           />
           <div className="profile-header">
             <img
-              src={userInfo.profile_photo_base64 || default_profile_photo}
+              src={profilephoto || default_profile_photo}
               alt="Profile"
               className="profile-pic"
             />
