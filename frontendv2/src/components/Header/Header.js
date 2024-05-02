@@ -66,7 +66,7 @@ export function Header() {
   };
 
   const navigateToClaims = () => {
-    navigate("/claimsv2");
+    navigate("/claims");
   };
 
   const handleTitleChange = (text) => {
@@ -110,6 +110,7 @@ export function Header() {
     setHelpMenuAnchor(null);
     navigate("/faq");
   };
+
   return (
     <>
       <AppBar
