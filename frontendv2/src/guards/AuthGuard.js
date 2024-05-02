@@ -1,48 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setUserInfo } from '../store/slices/user';
-import { useDispatch } from 'react-redux'
+import { setUserInfo, getUser } from '../store/slices/user';
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProfile } from '../api/user';
 
 const AuthGuard = ({ component }) => {
-  const [status, setStatus] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const user = useSelector(getUser)
 
   const [loading, setLoading] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
 
   useEffect(() => {
-    fetchProfileInfo();
+    if (Object.keys(user).length === 0) {
+      fetchProfileInfo();
+    } else {
+      setAuthenticated(true)
+    }
   }, [component]);
 
   const fetchProfileInfo = async () => {
-    try {
-        setLoading(true)
-        const apiUrlGet = "http://127.0.0.1:8000/api/profile"; // Replace with your actual endpoint
-        const accessToken = JSON.parse(sessionStorage.getItem("access"));
-        const responseGet = await fetch(apiUrlGet, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json;",
-                "Authorization": `Bearer ${accessToken}`
-            }
-        });
+    setLoading(true)
+    fetchProfile()
+      .then(data => {
         setAuthenticated(true)
-        if (responseGet.ok) {
-            const dataGet = await responseGet.json();
-            dispatch(setUserInfo(dataGet))
-            console.log("GET request successful:", dataGet);
-            sessionStorage.setItem("profile", JSON.stringify(dataGet));
-        } else {
-            console.error("GET request failed! Status:", responseGet.status);
-            navigate(`/login`);
-        }
-    } catch (error) {
-        navigate(`/login`);
-        console.error("Error making GET request:", error.message);
-    } finally {
-      setLoading(false)
-    }
+        dispatch(setUserInfo(data))
+        console.log("GET request successful:", data);
+        sessionStorage.setItem("profile", JSON.stringify(data));
+        sessionStorage.setItem("userData", JSON.stringify(data));
+      })
+      .catch((error) => {
+        navigate('/login')
+      })
+      .finally(() => setLoading(false))
   }
 
   return authenticated ? <React.Fragment>{component}</React.Fragment> : <React.Fragment></React.Fragment>;

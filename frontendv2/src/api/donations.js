@@ -1,17 +1,27 @@
 import { axiosInstance } from ".";
+import { encodeQueryData } from ".";
 
-export const createDonation = async (title, category) => {
+export const createDonation = async (title, category, description, address) => {
     const createdDonationResponse = await axiosInstance.post('/donation', {
         item: title,
+        description,
+        address,
         category,
         datetime: new Date().toISOString()
     })
-    return true
+    return createdDonationResponse.data
 }
 
-export const fetchDonations = async () => {
-    const donationsResponse = await axiosInstance.get('/donation')
-    console.log(donationsResponse.data.results)
+export const uploadImageToDonation = async (image, id) => {
+    const response = await axiosInstance.post('/image', { donation: image, donation_id: id }, {headers: {
+        "content-type": "multipart/form-data"
+    }})
+    return response.data
+}
+
+export const fetchDonations = async (data) => {
+    const queryString  = encodeQueryData(data)
+    const donationsResponse = await axiosInstance.get(`/donation?${queryString}`)
     return donationsResponse.data.results
 }
 
@@ -23,4 +33,13 @@ export const deleteDonation = async (id) => {
 export const claimDonation = async (id) => {
     const claimDonationResponse = await axiosInstance.post(`/donation/${id}/claim`)
     return claimDonationResponse.data
+}
+
+export const generateDescription = async (file) => {
+    const descriptionResponse = await axiosInstance.post('/description', {
+        donation: file
+    }, {headers: {
+        "content-type": "multipart/form-data"
+    }})
+    return descriptionResponse.data
 }

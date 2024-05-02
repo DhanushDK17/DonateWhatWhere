@@ -4,6 +4,7 @@ import NavBar from "../NavBar";
 import home from "../../assets/images/home.png";
 import ChatIcon from "@mui/icons-material/Chat";
 import ChatList from "../chat/ChatList";
+import { fetchClaims } from "../../api/claims";
 
 const DonationCard = ({ donation }) => {
   const { item, category, donated_by } = donation;
@@ -48,27 +49,15 @@ const Claims = () => {
 
   useEffect(() => {
     const fetchClaimsData = async () => {
-      try {
-        const access = JSON.parse(sessionStorage.getItem("access"));
-        const response = await fetch("http://localhost:8000/api/claim", {
-          headers: {
-            Authorization: `Bearer ${access}`,
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setClaims(data);
-        } else {
-          console.error(
-            "Failed to fetch claims data. Server returned:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching claims data:", error);
-      }
+      fetchClaims().then(data => {
+        setClaims(data);
+      })
+      .catch(error => {
+        console.error(
+          "Failed to fetch claims data. Server returned:",
+          error.message
+        );
+      })
     };
     fetchClaimsData();
   }, []);
@@ -79,10 +68,10 @@ const Claims = () => {
 
   return (
     <div className="main-claim-container">
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="claim-container">
         <h1 className="heading">My Claims</h1>
-        {claims.results?.length > 0 ? (
+        {claims.length > 0 ? (
           <DonationList donations={claims.results} />
         ) : (
           <div>

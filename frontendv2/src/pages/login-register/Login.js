@@ -4,12 +4,15 @@ import { MdLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar";
 import dollar from "../../assets/images/dollar.png";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo } from "../../store/slices/user";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
@@ -52,38 +55,15 @@ const Login = () => {
         // Assuming your response structure is { name, email, phone, has_car, access, refresh }
         const { name, email, phone, has_car, access, refresh } = data;
 
-        sessionStorage.setItem("userData", JSON.stringify(data.user));
+        sessionStorage.setItem("profile", JSON.stringify(data.user));
         sessionStorage.setItem("access", JSON.stringify(access));
         sessionStorage.setItem("refresh", JSON.stringify(refresh));
         // Now you can handle the logged-in user, access token, and refresh token
-        console.log("Logged in user:", data.user.name);
+        console.log("Logged in user:", data.user.first_name);
         console.log("Access token:", data.access);
         console.log("Refresh token:", data.refresh);
-        try {
-          const apiUrlGet = "http://127.0.0.1:8000/api/profile"; // Replace with your actual endpoint
-          const responseGet = await fetch(apiUrlGet, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json;",
-            },
-          });
-
-          if (responseGet.ok) {
-            const dataGet = await responseGet.json();
-
-            console.log("GET request successful:", dataGet);
-
-            // Store the GET request response in sessionStorage
-            sessionStorage.setItem("profile", JSON.stringify(dataGet));
-          } else {
-            console.error("GET request failed! Status:", responseGet.status);
-            // Handle error for the GET request if needed
-          }
-        } catch (error) {
-          // Handle errors for the GET request
-          console.error("Error making GET request:", error.message);
-        }
-        navigate("/userprofile");
+        dispatch(setUserInfo(data.user))
+        navigate('/')
       }
     } catch (error) {
       // Handle errors here
@@ -102,6 +82,7 @@ const Login = () => {
 
   return (
     <div className="main-login-register">
+      {/* <NavBar /> */}
       <section className="login-container">
         <div className="statistics">
           <div className="stat-item">

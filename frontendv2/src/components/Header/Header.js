@@ -1,47 +1,43 @@
-import { useState } from "react";
-import {
-  DialogActions,
-  DialogTitle,
-  Stack,
-  DialogContent,
-  TextField,
-  Dialog,
-  AppBar,
-  Button,
-  Toolbar,
-  Typography,
-  Grid,
-  Menu,
-  MenuItem,
-  Divider,
-} from "@mui/material";
-import styles from "./styles.module.css";
-import AddIcon from "@mui/icons-material/Add";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ChatIcon from "@mui/icons-material/Chat";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CloseIcon from "@mui/icons-material/Close";
+import { useEffect, useState } from "react";
+import { InputAdornment, IconButton, DialogActions, DialogTitle, Stack, DialogContent, TextField, Dialog, AppBar, Button, Toolbar, Typography, Grid, Menu, MenuItem, Divider } from "@mui/material";
+import styles from './styles.module.css'
+import AddIcon from '@mui/icons-material/Add';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ChatIcon from '@mui/icons-material/Chat';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { useDispatch } from "react-redux";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useDispatch, useSelector } from "react-redux";
 import { fetchDonationsAction } from "../../store/slices/donation";
-import { createDonation } from "../../api/donations";
+import { createDonation, generateDescription, uploadImageToDonation } from "../../api/donations";
+import { getUser, resetUserData } from "../../store/slices/user";
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { styled } from '@mui/material/styles';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import logoImage from "../../assets/images/home.png";
 
 export function Header() {
   const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [createLoading, setCreateLoading] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [createLoading, setCreateLoading] = useState(false)
   const [helpMenuAnchor, setHelpMenuAnchor] = useState(null);
+  const user = useSelector(getUser)
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [address, setAddress] = useState('')
+  const [image, setImage] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
+  const [descriptionLoading, setDescriptionLoading] = useState(false)
+  const placeHolder = "https://content.hostgator.com/img/weebly_image_sample.png"
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
-    navigate("/userprofile");
   };
 
   const handleHelpMenuClose = () => {
@@ -54,8 +50,12 @@ export function Header() {
   };
 
   const handleClickCreate = () => {
-    setShowCreateDialog(true);
-  };
+    if (user.user_type === 'PERSONAL') {
+      setShowCreateDialog(true)  
+    } else {
+      setShowCreateDialog(true)
+    }
+  }
 
   const handleCloseCreate = () => {
     setShowCreateDialog(false);
@@ -69,32 +69,93 @@ export function Header() {
     navigate("/claims");
   };
 
-  const handleTitleChange = (text) => {
-    setTitle(text);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
   };
 
-  const handleCategoryChange = (category) => {
-    setCategory(category);
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
   };
 
   const handleCreate = async () => {
-    setCreateLoading(true);
-    createDonation(title, category)
-      .then(() => {
-        dispatch(fetchDonationsAction());
-        setShowCreateDialog(false);
-      })
-      .catch((error) => console.log(error))
-      .finally(() => setCreateLoading(false));
+    try {
+      setCreateLoading(true);
+      const createdDonation = await createDonation(title, category, description)
+      const updatedDonation = await uploadImageToDonation(image, createdDonation.id)
+      dispatch(fetchDonationsAction());
+      resetData()
+      setShowCreateDialog(false);
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setCreateLoading(false)
+    }
   };
+
+  const resetData = () => {
+    setAddress('')
+    setCategory('')
+    setDescription('')
+    setTitle('')
+    setImage('')
+    setPreviewUrl('')
+  }
 
   const handleProfileMenuOpen = (event) => {
     setProfileMenuAnchor(event.currentTarget);
   };
 
+  const handleOpenPage = (page) => {
+    console.log(page)
+    navigate(`/${page}`)
+    handleProfileMenuClose()
+  }
   const handleHelpMenuOpen = (event) => {
     setHelpMenuAnchor(event.currentTarget);
   };
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value)
+  }
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+
+  const handleGenerateDescription = () => {
+    setDescriptionLoading(true)
+    generateDescription(image)
+    .then(data => {
+      setDescription(data.description)
+    })
+    .catch(error => console.error(error))
+    .finally(() => setDescriptionLoading(false))
+  }
+
+  const handleFileSelect = (event) => {
+    setImage(event.target.files[0])
+    const imageUrl = URL.createObjectURL(event.target.files[0])
+    setPreviewUrl(imageUrl)
+  }
+
+  const handleLogout = () => {
+    sessionStorage.clear()
+    dispatch(resetUserData())
+    navigate('/login')
+    handleProfileMenuClose()
+  }
+
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
+
 
   const handleSupport = () => {
     setHelpMenuAnchor(null);
@@ -119,162 +180,182 @@ export function Header() {
           px: 4,
         }}
         className={`${styles.header}`}
-        style={{ backgroundColor: "#361d32", padding: "15px" }}
-      >
-        <Toolbar>
-          <div className="nav-logo-img">
-            <img
-              src={logoImage}
-              alt="img"
-              style={{ width: "55px", height: "auto" }}
-            />
-          </div>
-          <Grid container justifyContent="space-between" alignItems="center">
+        style={{backgroundColor: 'primary.main'}}
+    >
+      <Toolbar>
+        <Grid container justifyContent="space-between" alignItems="center">
+          <Stack direction="row" alignItems="center">
             <Grid item>
-              <Button onClick={() => navigate("/")}>
-                <Typography variant="h6" sx={{ color: "text.navbar" }}>
+              <img
+                src={logoImage}
+                alt="img"
+                style={{ width: "55px", height: "auto" }}
+              />
+            </Grid>
+            <Grid item>
+              <Button onClick={() => navigate('/')}>
+                <Typography variant="h6" sx={{color:"text.navbar"}}>
                   Donate What Where
+                </Typography>
+                <Typography variant="body" sx={{color: "text.navbar", ml: 2}}>
+                { user.email }
+                  { user.user_type}
                 </Typography>
               </Button>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={handleClickCreate}
-                variant="h6"
-                sx={{ color: "text.navbar", borderRight: "1px solid white" }}
-              >
-                <AddIcon />
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => navigate("/")}
-                sx={{ color: "text.navbar", fontSize: "18px" }}
-              >
-                My Donations
-              </Button>
-              <Button
-                onClick={navigateToChats}
-                variant="h6"
-                sx={{ color: "text.navbar" }}
-              >
-                <ChatIcon />
-              </Button>
-              <Button
-                onClick={navigateToClaims}
-                variant="h6"
-                sx={{ color: "text.navbar" }}
-              >
-                <CheckBoxIcon />
-              </Button>
-              <Button
-                onClick={handleHelpMenuOpen}
-                variant="h6"
-                sx={{ color: "text.navbar", fontSize: "18px" }}
-              >
-                Help
-              </Button>
-              <Button onClick={handleProfileMenuOpen}>
-                <AccountCircleIcon
-                  sx={{ color: "white" }}
-                  src="/broken-image.jpg"
-                />
-              </Button>
-            </Grid>
-          </Grid>
-          <Menu
-            anchorEl={profileMenuAnchor}
-            open={Boolean(profileMenuAnchor)}
-            onClose={handleProfileMenuClose}
-          >
-            <MenuItem spacing={2} onClick={handleAdminMenuClose}>
-              <Typography variant="body1">Admin Console</Typography>
-            </MenuItem>
-            <Divider color="divider" variant="middle" />
-            <MenuItem spacing={2} onClick={handleProfileMenuClose}>
-              <Typography variant="body1">Profile</Typography>
-            </MenuItem>
-            <Divider color="divider" variant="middle" />
-            <MenuItem spacing={2}>
-              <Typography variant="body1">Logout</Typography>
-            </MenuItem>
-          </Menu>
-          <Menu
-            anchorEl={helpMenuAnchor}
-            open={Boolean(helpMenuAnchor)}
-            onClose={handleHelpMenuClose}
-          >
-            <MenuItem spacing={2} onClick={handleSupport}>
-              <Typography variant="body1">Support</Typography>
-            </MenuItem>
-            <Divider color="divider" variant="middle" />
-            <MenuItem spacing={2} onClick={handleAbout}>
-              <Typography variant="body1">About</Typography>
-            </MenuItem>
-            <Divider color="divider" variant="middle" />
-            <MenuItem spacing={2} onClick={handleFAQ}>
-              <Typography variant="body1">FAQ</Typography>
-            </MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-      <Dialog fullWidth open={showCreateDialog} onClose={handleCloseCreate}>
-        <DialogTitle sx={{ backgroundColor: "primary.main", py: 1 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ color: "white" }}
-          >
-            <Typography variant="h6" color="text.navbar">
-              Create donation
-            </Typography>
-            <Button onClick={handleCloseCreate}>
-              <CloseIcon sx={{ color: "white" }} />
-            </Button>
           </Stack>
-        </DialogTitle>
-        <DialogContent sx={{ pt: "20px !important", pb: 0 }}>
-          <Grid container direction="row" justifyContent="center">
-            <Grid item xs={9}>
-              <Grid container>
-                <Grid item xs={12} sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Title"
-                    value={title}
-                    onChange={(event) => handleTitleChange(event.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Category"
-                    value={category}
-                    onChange={(event) =>
-                      handleCategoryChange(event.target.value)
+          {
+            Object.keys(user).length > 0
+            &&
+            <>
+              <Grid item>
+                {user.user_type === 'PERSONAL' && <Button onClick={handleClickCreate} variant="h6" sx={{color:"text.navbar"}}>
+                  <AddIcon/>
+                </Button>}
+                {user.user_type === 'PERSONAL' && <Button variant="secondary" onClick={() => navigate('/donations')} sx={{color:"text.navbar"}}>
+                  My Donations
+                </Button>}
+                {user.user_type === 'ORGANIZATION' && 
+                  <Button variant="secondary" onClick={() => navigate('/events')} sx={{color:"text.navbar"}}>
+                    My Events
+                  </Button>
+                }
+                <Button onClick={navigateToChats} variant="h6" sx={{color:"text.navbar"}}>
+                  <ChatIcon/>
+                </Button>
+                {
+                  user.user_type !== 'PERSONAL' && <Button onClick={navigateToClaims} variant="h6" sx={{color:"text.navbar"}}>
+                    <CheckBoxIcon/>
+                  </Button>
+                }
+                <Button
+                  onClick={handleHelpMenuOpen}
+                  variant="h6"
+                  sx={{ color: "text.navbar", fontSize: "18px" }}
+                >
+                  Help
+                </Button>
+                <Button onClick={handleProfileMenuOpen}>
+                  <AccountCircleIcon sx={{ color:'white'}} src="/broken-image.jpg"/> 
+                </Button>
+              </Grid>
+            </>
+          }
+        </Grid>
+        <Menu
+          anchorEl={profileMenuAnchor}
+          open={Boolean(profileMenuAnchor)}
+          onClose={handleProfileMenuClose}
+        >
+          <MenuItem spacing={2} onClick={() => handleOpenPage('userprofile')}>
+            <Typography variant="body1">Profile</Typography>
+          </MenuItem>
+          <Divider color="divider" variant="middle"/>
+          <MenuItem spacing={2} onClick={() => handleOpenPage('faq')}>
+            <Typography variant="body1">FAQ</Typography>
+          </MenuItem>
+          <Divider color="divider" variant="middle"/>
+          <MenuItem spacing={2} onClick={() => handleOpenPage('support')}>
+            <Typography variant="body1">Support</Typography>
+          </MenuItem>
+          <Divider color="divider" variant="middle"/>
+          <MenuItem spacing={2} onClick={() => handleOpenPage('about')}>
+            <Typography variant="body1">About</Typography>
+          </MenuItem>
+          <Divider color="divider" variant="middle"/>
+          <MenuItem spacing={2} onClick={handleLogout}>
+            <Typography variant="body1">Logout</Typography>
+          </MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={showCreateDialog}
+      onClose={handleCloseCreate}
+      
+    >
+      <DialogTitle sx={{backgroundColor: 'primary.main', py: 1}}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{color: 'white'}}>
+          <Typography variant="h6" color="text.navbar" >Create donation</Typography>
+          <Button onClick={handleCloseCreate}>
+            <CloseIcon sx={{color: 'white'}}/>
+          </Button>
+        </Stack>
+      </DialogTitle>
+      <DialogContent sx={{pt: "20px !important", pb: 0}}>
+        <Grid container direction="row" justifyContent="center">
+          <Grid item xs={7}>
+            <Grid container>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Title" value={title} onChange={handleTitleChange}/>
+              </Grid>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Category"  value={category} onChange={handleCategoryChange}
+                />
+              </Grid>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Address"  value={address} onChange={handleAddressChange}
+                />
+              </Grid>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput type="file" onChange={handleFileSelect} />
+              </Button>
+              <Grid item xs={12} sx={{mt: 2}}>
+                <TextField multiline rows={5}
+                  fullWidth
+                  size="small"
+                  label="Description"
+                  value={description}
+                  onChange={(event) => handleDescriptionChange(event)}
+                  disabled={descriptionLoading}
+                  InputProps={
+                    {
+                      endAdornment: 
+                        <InputAdornment position="end" sx={{
+                          alignItems: 'flex-start',
+                          mt: 6
+                        }}>
+                          <IconButton
+                            onClick={handleGenerateDescription}
+                            edge="end"
+                          >
+                            <AutoFixHighIcon 
+                              sx={{
+                                fontSize: 23
+                              }} />
+                          </IconButton>
+                        </InputAdornment>
                     }
+                  }
                   />
-                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreate}>
-            Cancel
-          </Button>
-          <LoadingButton
-            variant="contained"
-            sx={{ backgroundColor: "primary.main" }}
-            loading={createLoading}
-            onClick={handleCreate}
-          >
-            Create
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
+          <Grid item xs={4} sx={{ml: 2, p: 3}}>
+            {/* <Stack direction="column" alignItems="center" justifyContent="space-around" height="100%">
+              <Typography variant="h3">Select a file to upload</Typography>
+              <IconButton>
+                <CloudUploadIcon/>
+              </IconButton>
+            </Stack> */}
+            <img style={{objectFit: 'contain', width: "100%", height: "294px"}} src={previewUrl === '' ? placeHolder : previewUrl} alt="preview" />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
+        <LoadingButton variant="contained" disabled={descriptionLoading || createLoading} sx={{backgroundColor: "primary.main"}} loading={createLoading} onClick={handleCreate}>Create</LoadingButton>
+      </DialogActions>
+    </Dialog>
     </>
   );
 }
