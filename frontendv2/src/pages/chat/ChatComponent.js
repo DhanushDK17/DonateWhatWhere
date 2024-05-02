@@ -47,7 +47,7 @@ const ChatComponent = ({ conversation }) => {
         socket.current.disconnect();
       }
     };
-  }, [conversation_id, person2]);
+  }, [conversation_id, person2, messages]);
 
   const fetchMessages = async () => {
     if (conversation_id) {
@@ -118,11 +118,11 @@ const ChatComponent = ({ conversation }) => {
           }
         );
         //Uncomment these lines
-        /*
+
         setTimeout(() => {
           fetchMessages();
-        }, 10000);
-       */
+        }, 5000);
+
         // Do something with the response if needed
       } catch (error) {
         console.error("Error sending message:", error);
