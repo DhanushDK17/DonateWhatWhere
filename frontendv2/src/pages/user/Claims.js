@@ -56,9 +56,9 @@ const Claims = () => {
               const { initiator, receiver, last_message } = conversation;
               if (last_message) {
                 // Check if last_message is not undefined
-                const person1Id = userData.id;
+                const person1Id = userData?.id;
                 const person2Id =
-                  userData.id !== initiator.id ? initiator.id : receiver.id;
+                  userData?.id !== initiator.id ? initiator.id : receiver.id;
                 const key = [person1Id, person2Id].join("_");
 
                 if (
@@ -68,9 +68,9 @@ const Claims = () => {
                 ) {
                   newConversationMap[key] = {
                     person1:
-                      userData.id === initiator.id ? initiator : receiver,
+                      userData?.id === initiator.id ? initiator : receiver,
                     person2:
-                      userData.id !== initiator.id ? initiator : receiver,
+                      userData?.id !== initiator.id ? initiator : receiver,
                     message: last_message,
                     conversation_id: conversation.id,
                   };
@@ -140,67 +140,82 @@ const Claims = () => {
   };
 
   return (
-    <div className="main-claim-container">
-      {/*<h1 className="heading">My Claims</h1>*/}
-      <div className="claim-container">
-        {claims.results?.length > 0 ? (
-          <div className="donation-list">
-            {claims.results &&
-              claims.results.map((donation, index) => (
-                <>
-                  <Accordion style={{ border: "1.5px solid #f55951" }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"
+    <div>
+      <h1 className="heading">Claims</h1>
+      <div className="main-claim-container">
+        <div className="claim-container">
+          {claims.results?.length > 0 ? (
+            <div>
+              {claims.results &&
+                claims.results.map((donation, index) => (
+                  <>
+                    <Accordion
+                      style={{ border: "2px solid #ccc", marginBottom: "15px" }}
+                      key={index} // Ensure each accordion has a unique key
                     >
-                      <Grid item xs={7}>
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="space-between"
-                        >
-                          <Typography sx={{ mr: 1 }}>
-                            {donation.donation.item}
-                          </Typography>
-                          <Chip
-                            label={donation.donation.category}
-                            variant="outlined"
-                          />
-                          <Stack direction="row" alignItems="center">
-                            <PlaceIcon sx={{ fontSize: 19 }} />
-                            <Typography sx={{ fontSize: 15, mt: 0.3 }}>
-                              Austin
-                            </Typography>
-                          </Stack>
-                        </Stack>
-                      </Grid>
-                    </AccordionSummary>
-                    <AccordionActions>
-                      <Button size="small">Cancel</Button>
-                      <IconButton
-                        color="primary.main"
-                        size="small"
-                        onClick={() => handleChatIconClick(donation)}
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
                       >
-                        <ChatIcon />
-                      </IconButton>
-                    </AccordionActions>
-                  </Accordion>
-                </>
-              ))}
-          </div>
-        ) : (
-          <div>
-            <img src={home} className="no-history-image" alt="No claims" />
-            <p>No claims available</p>
-          </div>
-        )}
-      </div>
-      <div className="chat-container">
-        {showChatComponent && (
-          <ChatComponent conversation={selectedConversation} />
-        )}
+                        <Grid container alignItems="center" spacing={2}>
+                          <Grid item xs={3}>
+                            <Typography sx={{ mr: 1 }}>
+                              {donation.donation.item}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Chip
+                              label={donation.donation.category}
+                              variant="outlined"
+                            />
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Stack direction="row" alignItems="center">
+                              <PlaceIcon sx={{ fontSize: 19 }} />
+                              <Typography sx={{ fontSize: 15, mt: 0.3 }}>
+                                {donation.donation.address
+                                  ? donation.donation.address
+                                  : "Austin"}
+                              </Typography>
+                            </Stack>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Stack direction="row" alignItems="center">
+                              <Typography sx={{ fontSize: 15, mt: 0.3 }}>
+                                {donation.donation.donated_by.first_name}{" "}
+                                {donation.donation.donated_by.last_name}
+                              </Typography>
+                            </Stack>
+                          </Grid>
+                        </Grid>
+                      </AccordionSummary>
+                      <AccordionActions>
+                        <Button size="small">Cancel</Button>
+                        <IconButton
+                          color="primary.main"
+                          size="small"
+                          onClick={() => handleChatIconClick(donation)}
+                        >
+                          <ChatIcon />
+                        </IconButton>
+                      </AccordionActions>
+                    </Accordion>
+                  </>
+                ))}
+            </div>
+          ) : (
+            <div>
+              <img src={home} className="no-history-image" alt="No claims" />
+              <p>No claims available</p>
+            </div>
+          )}
+        </div>
+        <div className="chat-container">
+          {showChatComponent && (
+            <ChatComponent conversation={selectedConversation} />
+          )}
+        </div>
       </div>
     </div>
   );
