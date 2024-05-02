@@ -34,6 +34,7 @@ export function Header() {
   const [createLoading, setCreateLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [helpMenuAnchor, setHelpMenuAnchor] = useState(null);
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -41,6 +42,10 @@ export function Header() {
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
     navigate("/userprofile");
+  };
+
+  const handleHelpMenuClose = () => {
+    setHelpMenuAnchor(null);
   };
 
   const handleAdminMenuClose = () => {
@@ -61,7 +66,7 @@ export function Header() {
   };
 
   const navigateToClaims = () => {
-    navigate("/claimsv2");
+    navigate("/claims");
   };
 
   const handleTitleChange = (text) => {
@@ -85,6 +90,25 @@ export function Header() {
 
   const handleProfileMenuOpen = (event) => {
     setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleHelpMenuOpen = (event) => {
+    setHelpMenuAnchor(event.currentTarget);
+  };
+
+  const handleSupport = () => {
+    setHelpMenuAnchor(null);
+    navigate("/support");
+  };
+
+  const handleAbout = () => {
+    setHelpMenuAnchor(null);
+    navigate("/about");
+  };
+
+  const handleFAQ = () => {
+    setHelpMenuAnchor(null);
+    navigate("/faq");
   };
 
   return (
@@ -142,6 +166,13 @@ export function Header() {
               >
                 <CheckBoxIcon />
               </Button>
+              <Button
+                onClick={handleHelpMenuOpen}
+                variant="h6"
+                sx={{ color: "text.navbar", fontSize: "18px" }}
+              >
+                Help
+              </Button>
               <Button onClick={handleProfileMenuOpen}>
                 <AccountCircleIcon
                   sx={{ color: "white" }}
@@ -165,6 +196,23 @@ export function Header() {
             <Divider color="divider" variant="middle" />
             <MenuItem spacing={2}>
               <Typography variant="body1">Logout</Typography>
+            </MenuItem>
+          </Menu>
+          <Menu
+            anchorEl={helpMenuAnchor}
+            open={Boolean(helpMenuAnchor)}
+            onClose={handleHelpMenuClose}
+          >
+            <MenuItem spacing={2} onClick={handleSupport}>
+              <Typography variant="body1">Support</Typography>
+            </MenuItem>
+            <Divider color="divider" variant="middle" />
+            <MenuItem spacing={2} onClick={handleAbout}>
+              <Typography variant="body1">About</Typography>
+            </MenuItem>
+            <Divider color="divider" variant="middle" />
+            <MenuItem spacing={2} onClick={handleFAQ}>
+              <Typography variant="body1">FAQ</Typography>
             </MenuItem>
           </Menu>
         </Toolbar>

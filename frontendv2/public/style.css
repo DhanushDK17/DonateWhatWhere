@@ -479,11 +479,11 @@ button:hover {
 .about {
   padding: 20px;
   background-color: #fff;
-  padding-top: 100px;
+  padding-top: 20px;
 }
 
 .about h2 {
-  color: #054957;
+  color: #543c52;
   font-size: 22px;
 }
 
@@ -505,7 +505,7 @@ button:hover {
 }
 
 .how-it-works h2 {
-  color: #054957;
+  color: #361d32;
   font-size: 22px;
 }
 
@@ -525,23 +525,17 @@ button:hover {
 /* Chat */
 .chat {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
 
 .chat-container {
   display: flex;
   flex-direction: column;
-  max-height: 70vh;
+  height: 75vh;
+  max-height: 75vh;
   border: 1.5px solid #ccc;
-  border-radius: 8px;
   background-color: #fff;
-  overflow: hidden;
   font-family: "Poppins", sans-serif;
-  padding-bottom: 70px;
-  margin-top: 350px;
-  width: 40vw;
+  width: 65vw;
 }
 
 .message-list {

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-//import claims from "./claims.json";
 import "./Claims.css"; // Import the CSS file
 import NavBar from "../NavBar";
 import home from "../../assets/images/home.png";
+import ChatIcon from "@mui/icons-material/Chat";
+import ChatList from "../chat/ChatList";
+
 const DonationCard = ({ donation }) => {
   const { item, category, donated_by } = donation;
 
@@ -10,9 +12,20 @@ const DonationCard = ({ donation }) => {
     <div className="card">
       <h3>{item}</h3>
       <p className="text">Category: {category}</p>
-      <p className="text">
-        Donated By: {donated_by.first_name} {donated_by.last_name}
-      </p>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignContent: "center",
+          justifyContent: "center",
+        }}
+      >
+        <p className="text">
+          Donated By: {donated_by.first_name} {donated_by.last_name}
+        </p>
+        <ChatIcon style={{ padding: "7px" }} />
+      </div>
+
       <p className="text">Email: {donated_by.email}</p>
     </div>
   );
@@ -31,19 +44,11 @@ const DonationList = ({ donations }) => {
 
 const Claims = () => {
   const [claims, setClaims] = useState({});
-
-  /*
-   useEffect(() => {
-    // Simulating fetching data from API
-    setData(claims);
-  }, []);
-
-  */
+  const [showChatList, setShowChatList] = useState(false);
 
   useEffect(() => {
     const fetchClaimsData = async () => {
       try {
-        // Make an API call here to get the ride history data
         const access = JSON.parse(sessionStorage.getItem("access"));
         const response = await fetch("http://localhost:8000/api/claim", {
           headers: {
@@ -61,14 +66,16 @@ const Claims = () => {
             response.statusText
           );
         }
-        // Set the fetched data to the state
       } catch (error) {
         console.error("Error fetching claims data:", error);
       }
     };
-    // Call the function to fetch data when the component mounts
     fetchClaimsData();
   }, []);
+
+  const toggleChatList = () => {
+    setShowChatList(!showChatList);
+  };
 
   return (
     <div className="main-claim-container">
@@ -79,10 +86,12 @@ const Claims = () => {
           <DonationList donations={claims.results} />
         ) : (
           <div>
-            <img src={home} className="no-history-image" />
+            <img src={home} className="no-history-image" alt="No claims" />
             <p>No claims available</p>
           </div>
         )}
+        {showChatList && <ChatList />}
+        <ChatIcon className="chat-icon" onClick={toggleChatList} />
       </div>
     </div>
   );

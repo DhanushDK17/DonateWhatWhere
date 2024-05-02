@@ -12,7 +12,7 @@ import Option from "./pages/login-register/Option";
 import UserProfile from "./pages/user/UserProfile";
 import Claims from "./pages/user/Claims";
 import AuthGuard from "./guards/AuthGuard";
-import { Chats } from "./pages/Chats";
+import Chats from "./pages/Chats";
 import { ClaimsPage } from "./pages/Claims";
 import ChatList from "./pages/chat/ChatList";
 import ChatComponent from "./pages/chat/ChatComponent";

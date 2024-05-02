@@ -1,23 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
 import { useParams, useLocation } from "react-router-dom";
+import io from "socket.io-client";
 
-const ChatComponent = () => {
+const ChatComponent = ({ conversation }) => {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState({});
   const [initiator, setInitiator] = useState({});
   const [receiver, setReceiver] = useState({});
   const [error, setError] = useState(null);
-  const { conversation_id } = useParams();
+  const { conversation_id, person2 } = conversation;
   const [receiverName, setReceiverName] = useState("");
   const location = useLocation();
   const personDetails = location.state ? location.state.person : null;
-  // Define fetchMessages function
+
+  const socket = useRef(null); // Change to useRef
+
+  useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem("userData"));
+    console.log("User", user);
+    setUserData(user);
+    fetchMessages();
+
+    // Subscribe to conversation_id channel
+    if (conversation_id && socket.current) {
+      // Check if socket exists before using it
+      console.log("Channel exists");
+      socket.current.emit("subscribe", { channel: conversation_id });
+    }
+
+    // Listen for incoming messages
+    if (socket.current) {
+      // Check if socket exists before using it
+      socket.current.on("message", (message) => {
+        console.log("Received message:", message);
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
+    }
+
+    return () => {
+      // Clean up on component unmount
+      if (socket.current) {
+        // Check if socket exists before using it
+        socket.current.disconnect();
+      }
+    };
+  }, [conversation_id]);
+
   const fetchMessages = async () => {
     try {
       const access = JSON.parse(sessionStorage.getItem("access"));
+      console.log("conversation_id", conversation_id);
+      console.log("person2", person2);
       const response = await fetch(
         `http://localhost:8000/api/message/${conversation_id}`,
         {
@@ -46,26 +82,25 @@ const ChatComponent = () => {
     }
   };
 
-  useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("userData"));
-    console.log("User", user);
-    setUserData(user);
-    fetchMessages();
-    // const intervalId = setInterval(fetchMessages, 3000);
-    // return () => clearInterval(intervalId);
-  }, []);
-
   const sendMessage = async (messageText) => {
     const email =
       userData.id === initiator.id ? receiver.email : initiator.email;
     console.log("Receiver email", email);
 
     if (userData) {
-      const newMessage = {
-        receiver: email,
-        text: messageText,
-        conversation_id: conversation_id,
-      };
+      let newMessage = {}; // Changed from const to let
+      if (conversation_id) {
+        newMessage = {
+          receiver: email,
+          text: messageText,
+          conversation_id: conversation_id,
+        };
+      } else {
+        newMessage = {
+          receiver: email,
+          text: messageText,
+        };
+      }
 
       try {
         const access = JSON.parse(sessionStorage.getItem("access"));
@@ -107,13 +142,13 @@ const ChatComponent = () => {
       <div className="chat-container">
         <div
           style={{
-            backgroundColor: "#f55951",
+            backgroundColor: "#543c52",
             color: "#fff",
             padding: "20px",
             border: "1.5px solid #ccc",
           }}
         >
-          {personDetails?.first_name}
+          {person2.first_name + " " + person2.last_name}
         </div>
         <MessageList messages={messages} currentUserId={userData.id} />
         <ChatInput onSend={sendMessage} />
