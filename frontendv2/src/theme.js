@@ -4,7 +4,7 @@ export const productTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#f55951", // Navbar Color
+      main: '#361d32', // Navbar Color
     },
     secondary: {
       main: "#edd2cb", // Cards color

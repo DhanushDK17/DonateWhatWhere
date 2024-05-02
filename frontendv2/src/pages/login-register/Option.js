@@ -22,7 +22,7 @@ export default function Option() {
 
   return (
     <div className="main-login-register">
-      <NavBar />
+      {/* <NavBar /> */}
       <section className="login-container">
         <div className="statistics">
           <div className="stat-item">

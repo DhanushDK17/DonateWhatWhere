@@ -18,35 +18,34 @@ import ChatList from "./pages/chat/ChatList";
 import ChatComponent from "./pages/chat/ChatComponent";
 import CreateEvent from "./pages/event/CreateEvent";
 import ListEvent from "./pages/event/ListEvent";
+import { Events } from "./pages/Events";
+import { Donations } from "./components/Donations";
+import { MyDonations } from "./pages/MyDonations";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route exact path="/" element={<MainLayout />}>
-          <Route index element={<AuthGuard component={<HomePage />} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/landingpage"
-            element={<AuthGuard component={<LandingPage />} />}
-          />
-          <Route path="/chats" element={<AuthGuard component={<Chats />} />} />
-          <Route
-            path="/claims"
-            element={<AuthGuard component={<Claims />} />}
-          />
           <Route path="/support" element={<ContactForm />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/option" element={<Option />} />
-          <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/claims" element={<Claims />} />
-          <Route path="/claimsv2" element={<ClaimsPage />} />
-          <Route path="/chatlist" element={<ChatList />} />
-          <Route path="/chat/:conversation_id" element={<ChatComponent />} />
-          <Route path="/createevent" element={<CreateEvent />} />
-          <Route path="/listevent" element={<ListEvent />} />
+          <Route path="/landingpage" element={<LandingPage/>} />
+          <Route index element={<AuthGuard component={<HomePage />} />} />
+          <Route path="/chats" element={<AuthGuard component={<Chats />} />} />
+          <Route path="/claims" element={<AuthGuard component={<Claims />} />}/>
+          <Route path="/donations" element={<AuthGuard component={<MyDonations />} />} />
+          <Route path="/userprofile" element={<AuthGuard component={<UserProfile />} />} />
+          <Route path="/events" element={<AuthGuard component={<Events />} />} />
+          <Route path="/chat/:conversation_id" element={<AuthGuard component={<ChatComponent />} />} />
+          <Route path="/createevent" element={<AuthGuard component={<CreateEvent />} />} />
+          <Route path="/listevent" element={<AuthGuard component={<ListEvent />} />} />
+          <Route path="/claimsv2" element={<AuthGuard component={<ClaimsPage />} />} />
+          <Route path="/chatlist" element={<AuthGuard component={<ChatList />} />} />
         </Route>
       </Routes>
     </Router>
