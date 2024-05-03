@@ -3,15 +3,22 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { useSelector } from "react-redux"
 import { getUser } from "../../store/slices/user"
 import EditIcon from '@mui/icons-material/Edit';
+import { deleteEvent } from "../../api/events";
+import { useDispatch } from "react-redux";
+import { fetchEventsAction } from "../../store/slices/event";
 
-export const EventItem = ({ event, editOpen }) => {
+export const EventItem = ({ event, onEdit }) => {
+    const dispatch = useDispatch()
 
     const handleEdit = () => {
-
+        onEdit(undefined, event)
     }
 
     const handleDelete = () => {
-
+        deleteEvent(event.id)
+        .then(() => {
+            dispatch(fetchEventsAction())
+        })
     }
 
     const user = useSelector(getUser)

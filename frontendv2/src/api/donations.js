@@ -43,3 +43,8 @@ export const generateDescription = async (file) => {
     }})
     return descriptionResponse.data
 }
+
+export const updateDonation = async (id, newDonation) => {
+    const updatedDonation = await axiosInstance.patch(`/donation/${id}`, newDonation)
+    return updatedDonation.data
+}

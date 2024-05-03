@@ -2,7 +2,7 @@ import { axiosInstance } from "."
 
 export const fetchEvents = async () => {
     const eventsResponse = await axiosInstance.get('/event')
-    return eventsResponse.data
+    return eventsResponse.data.results
 }
 
 export const createEvent = async (eventData) => {

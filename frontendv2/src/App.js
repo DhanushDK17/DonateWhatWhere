@@ -33,7 +33,6 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/option" element={<Option />} />
-          <Route path="/claims" element={<Claims />} />
           <Route path="/landingpage" element={<LandingPage/>} />
           <Route index element={<AuthGuard component={<HomePage />} />} />
           <Route path="/chats" element={<AuthGuard component={<Chats />} />} />

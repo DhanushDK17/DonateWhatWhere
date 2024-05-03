@@ -117,7 +117,7 @@ const Claims = () => {
     };
 
     fetchData();
-  }, [claims]);
+  }, []);
 
   const handleChatIconClick = (donation) => {
     setSelectedDonation(donation);
@@ -173,6 +173,7 @@ const Claims = () => {
         );
         // Optionally, handle error scenarios
       }
+      setShowChatComponent(false)
     } catch (error) {
       // An error occurred during the request
       console.error("Error handling DELETE request:", error);
@@ -231,6 +232,9 @@ const Claims = () => {
                           </Grid>
                         </Grid>
                       </AccordionSummary>
+                      <AccordionDetails>
+                        {donation.donation.description}
+                      </AccordionDetails>
                       <AccordionActions>
                         <Button
                           size="small"

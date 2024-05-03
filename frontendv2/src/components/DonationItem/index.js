@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardMedia,
   DialogContentText,
+  Grid
 } from "@mui/material";
 import { useState, useRef } from "react";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
@@ -28,9 +29,10 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Grow from "@mui/material/Grow";
 import { claimDonation, deleteDonation } from "../../api/donations";
-import { fetchDonationsAction } from "../../store/slices/donation";
+import { fetchDonationsAction, getEditing, setEditing } from "../../store/slices/donation";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/slices/user";
+import EditIcon from "@mui/icons-material/Edit";
 
 export const DonationItem = ({ data }) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -41,6 +43,7 @@ export const DonationItem = ({ data }) => {
   const [dialogText, setDialogText] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [claimLoading, setClaimLoading] = useState(false);
+  const edit = useSelector(getEditing)
 
   const handleClose = () => {
     setShowOptions(false);
@@ -83,6 +86,10 @@ export const DonationItem = ({ data }) => {
     setDialogTitle("Claim donation");
   };
 
+  const handleEdit = () => {
+    dispatch(setEditing(data))
+  }
+
   return (
     <>
       <Dialog fullWidth open={showConfirmation}>
@@ -111,7 +118,7 @@ export const DonationItem = ({ data }) => {
             loading={claimLoading}
             onClick={handleConfirmClaim}
           >
-            Create
+            {dialogTitle === "Delete donation" ? "Delete" : "Claim"}
           </LoadingButton>
         </DialogActions>
       </Dialog>
@@ -139,21 +146,29 @@ export const DonationItem = ({ data }) => {
           image={`data:image/png;base64,${data.image_base64}`}
           alt={data.item}
         />
-        <CardContent>
+        <CardContent sx={{overflow: 'scroll', height: '50px'}}>
           <Typography variant="body2" color="text.secondary">
             {data.description}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          {user.user_type === 'ORGANIZATION' && <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
-            <HandshakeIcon color="success" />
-          </IconButton>}
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-          {user.user_type === 'PERSONAL' && <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
-            <DeleteIcon color="error" />
-          </IconButton>}
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item xs={8}>
+              {user.user_type === 'ORGANIZATION' && <IconButton aria-label="Claim donation" onClick={handleClaimDonation}>
+                <HandshakeIcon color="success" />
+              </IconButton>}
+              {user.user_type === 'PERSONAL' && <IconButton aria-label="Edit" onClick={handleEdit}>
+                <EditIcon />
+              </IconButton>}
+              {user.user_type === 'PERSONAL' && <IconButton aria-label="Delete" onClick={handleDeleteDonation}>
+                <DeleteIcon color="error" />
+              </IconButton>}
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body3">{data.address || "Austin"}</Typography>
+            </Grid>
+          </Grid>
+          
           {/* <Popper
             open={showOptions}
             anchorEl={moreRef.current}

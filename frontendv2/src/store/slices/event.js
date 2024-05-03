@@ -44,7 +44,7 @@ const eventsSlice = createSlice({
   }
 });
 
-export const getEvents = (state) => state.event.event;
+export const getEvents = (state) => state.event.events;
 export const getEventsStatus = (state) => state.event.status;
 
 export default eventsSlice.reducer;
