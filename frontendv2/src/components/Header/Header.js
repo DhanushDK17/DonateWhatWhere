@@ -26,12 +26,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDonationsAction } from "../../store/slices/donation";
-import {
-  createDonation,
-  generateDescription,
-  uploadImageToDonation,
-} from "../../api/donations";
+import { fetchDonationsAction, getEditing, setEditing } from "../../store/slices/donation";
+import { createDonation, generateDescription, updateDonation, uploadImageToDonation } from "../../api/donations";
 import { getUser, resetUserData } from "../../store/slices/user";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import { styled } from "@mui/material/styles";
@@ -48,15 +44,28 @@ export function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [descriptionLoading, setDescriptionLoading] = useState(false);
-  const placeHolder =
-    "https://content.hostgator.com/img/weebly_image_sample.png";
+  
+
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [address, setAddress] = useState('')
+  const [image, setImage] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
+  const [descriptionLoading, setDescriptionLoading] = useState(false)
+  const placeHolder = "https://content.hostgator.com/img/weebly_image_sample.png"
+  const editing = useSelector(getEditing)
+
+  useEffect(() => {
+    if (editing !== '') {
+      setTitle(editing.item)
+      setCategory(editing.category)
+      setAddress(editing.address)
+      setDescription(editing.description)
+    } else {
+      resetData()
+    }
+  }, [editing])
 
   const handleProfileMenuClose = () => {
     setProfileMenuAnchor(null);
@@ -72,14 +81,15 @@ export function Header() {
   };
 
   const handleClickCreate = () => {
-    if (user.user_type === "PERSONAL") {
-      setShowCreateDialog(true);
+    if (user.user_type === 'PERSONAL') {
+      setShowCreateDialog(true)
     } else {
       setShowCreateDialog(true);
     }
   };
 
   const handleCloseCreate = () => {
+    dispatch(setEditing(''))
     setShowCreateDialog(false);
   };
 
@@ -100,24 +110,35 @@ export function Header() {
   };
 
   const handleCreate = async () => {
-    try {
-      setCreateLoading(true);
-      const createdDonation = await createDonation(
-        title,
-        category,
-        description
-      );
-      const updatedDonation = await uploadImageToDonation(
-        image,
-        createdDonation.id
-      );
-      dispatch(fetchDonationsAction());
-      resetData();
-      setShowCreateDialog(false);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setCreateLoading(false);
+    if (editing !== '') {
+      try {
+        setCreateLoading(true)
+        const updatedDonation = await updateDonation(editing.id, {
+          item: title,
+          category,
+          description, address
+        })
+        setCreateLoading(false)
+        dispatch(fetchDonationsAction())
+        setEditing('')
+        resetData()
+        setShowCreateDialog(false);
+      } catch (error) {
+
+      }
+    } else {
+      try {
+        setCreateLoading(true);
+        const createdDonation = await createDonation(title, category, description, address)
+        const updatedDonation = await uploadImageToDonation(image, createdDonation.id)
+        dispatch(fetchDonationsAction());
+        resetData()
+        setShowCreateDialog(false);
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setCreateLoading(false)
+      }
     }
   };
 
@@ -227,13 +248,13 @@ export function Header() {
                   >
                     Donate What Where
                   </Typography>
-                  {/*   <Typography
+                    {/* <Typography
                     variant="body"
                     sx={{ color: "text.navbar", ml: 2 }}
                   >
                     {user.email}
                     {user.user_type}
-                  </Typography>*/}
+                  </Typography> */}
                 </Button>
               </Grid>
             </Stack>
@@ -246,7 +267,6 @@ export function Header() {
                       variant="h6"
                       sx={{
                         color: "text.navbar",
-                        borderRight: "1px solid white",
                       }}
                     >
                       <AddIcon />
@@ -256,7 +276,7 @@ export function Header() {
                     <Button
                       variant="secondary"
                       onClick={() => navigate("/donations")}
-                      sx={{ color: "text.navbar" }}
+                      sx={{ color: "text.navbar", fontSize: '20px' }}
                     >
                       My Donations
                     </Button>
@@ -265,7 +285,7 @@ export function Header() {
                     <Button
                       variant="secondary"
                       onClick={() => navigate("/events")}
-                      sx={{ color: "text.navbar" }}
+                      sx={{ color: "text.navbar", fontSize: '20px' }}
                     >
                       My Events
                     </Button>
@@ -289,7 +309,7 @@ export function Header() {
                   <Button
                     onClick={handleHelpMenuOpen}
                     variant="h6"
-                    sx={{ color: "text.navbar" }}
+                    sx={{ color: "text.navbar",  fontSize: '20px' }}
                   >
                     Help
                   </Button>
@@ -335,90 +355,73 @@ export function Header() {
           </Menu>
         </Toolbar>
       </AppBar>
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        open={showCreateDialog}
-        onClose={handleCloseCreate}
-      >
-        <DialogTitle sx={{ backgroundColor: "primary.main", py: 1 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ color: "white" }}
-          >
-            <Typography variant="h6" color="text.navbar">
-              Create donation
-            </Typography>
-            <Button onClick={handleCloseCreate}>
-              <CloseIcon sx={{ color: "white" }} />
-            </Button>
-          </Stack>
-        </DialogTitle>
-        <DialogContent sx={{ pt: "20px !important", pb: 0 }}>
-          <Grid container direction="row" justifyContent="center">
-            <Grid item xs={7}>
-              <Grid container>
-                <Grid item xs={12} sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Title"
-                    value={title}
-                    onChange={handleTitleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Category"
-                    value={category}
-                    onChange={handleCategoryChange}
-                  />
-                </Grid>
-                <Grid item xs={12} sx={{ mb: 2 }}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Address"
-                    value={address}
-                    onChange={handleAddressChange}
-                  />
-                </Grid>
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload file
-                  <VisuallyHiddenInput
-                    type="file"
-                    onChange={handleFileSelect}
-                  />
-                </Button>
-                <Grid item xs={12} sx={{ mt: 2 }}>
-                  <TextField
-                    multiline
-                    rows={5}
-                    fullWidth
-                    size="small"
-                    label="Description"
-                    value={description}
-                    onChange={(event) => handleDescriptionChange(event)}
-                    disabled={descriptionLoading}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment
-                          position="end"
-                          sx={{
-                            alignItems: "flex-start",
-                            mt: 6,
-                          }}
-                        >
+        <Menu
+          anchorEl={profileMenuAnchor}
+          open={Boolean(profileMenuAnchor)}
+          onClose={handleProfileMenuClose}
+        >
+          <MenuItem spacing={2} onClick={() => handleOpenPage('userprofile')}>
+            <Typography variant="body1">Profile</Typography>
+          </MenuItem>
+          <Divider color="divider" variant="middle"/>
+          <MenuItem spacing={2} onClick={handleLogout}>
+            <Typography variant="body1">Logout</Typography>
+          </MenuItem>
+        </Menu>
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={showCreateDialog || editing !== ''}
+      onClose={handleCloseCreate}
+    >
+      <DialogTitle sx={{backgroundColor: 'primary.main', py: 1}}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{color: 'white'}}>
+          <Typography variant="h6" color="text.navbar" >Create donation</Typography>
+          <Button onClick={handleCloseCreate}>
+            <CloseIcon sx={{color: 'white'}}/>
+          </Button>
+        </Stack>
+      </DialogTitle>
+      <DialogContent sx={{pt: "20px !important", pb: 0}}>
+        <Grid container direction="row" justifyContent="center">
+          <Grid item xs={7}>
+            <Grid container>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Title" value={title} onChange={handleTitleChange}/>
+              </Grid>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Category"  value={category} onChange={handleCategoryChange}
+                />
+              </Grid>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <TextField fullWidth size="small" label="Address"  value={address} onChange={handleAddressChange}
+                />
+              </Grid>
+              <Button
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <VisuallyHiddenInput type="file" onChange={handleFileSelect} />
+              </Button>
+              <Grid item xs={12} sx={{mt: 2}}>
+                <TextField multiline rows={5}
+                  fullWidth
+                  size="small"
+                  label="Description"
+                  value={description}
+                  onChange={(event) => handleDescriptionChange(event)}
+                  disabled={descriptionLoading}
+                  InputProps={
+                    {
+                      endAdornment: 
+                        <InputAdornment position="end" sx={{
+                          alignItems: 'flex-start',
+                          mt: 6
+                        }}>
                           <IconButton
                             onClick={handleGenerateDescription}
                             edge="end"
@@ -430,7 +433,6 @@ export function Header() {
                             />
                           </IconButton>
                         </InputAdornment>
-                      ),
                     }}
                   />
                 </Grid>
@@ -443,11 +445,10 @@ export function Header() {
                 <CloudUploadIcon/>
               </IconButton>
             </Stack> */}
-              <img
-                style={{ objectFit: "contain", width: "100%", height: "294px" }}
-                src={previewUrl === "" ? placeHolder : previewUrl}
-                alt="preview"
-              />
+            <img 
+              style={{objectFit: 'contain', width: "100%", height: "294px"}} 
+              src={editing !== '' ? `data:image/png;base64,${editing.image_base64}` : previewUrl === '' ? placeHolder : previewUrl}
+              alt="preview" />
             </Grid>
           </Grid>
         </DialogContent>

@@ -6,7 +6,8 @@ import { claimDonation, deleteDonation, fetchDonations } from '../../api/donatio
 const initialState = {
     donations: {},
     status: "idle",
-    message: ""
+    message: "",
+    editing: ''
 }
 
 export const fetchDonationsAction = createAsyncThunk("donations/fetch", fetchDonations)
@@ -20,6 +21,11 @@ const donationSlice = createSlice({
     setDonations: (state,action) => {
       state.user = action.payload;
       return state;
+    },
+    setEditing: (state, action) => {
+      console.log(action.payload)
+      state.editing = action.payload
+      return state
     }
   },
   extraReducers(builder) {
@@ -50,5 +56,8 @@ const donationSlice = createSlice({
 export const getDonations = (state) => state.donation.donations;
 export const getDonationsStatus = (state) => state.donation.status;
 export const getDonationsMessage = (state) => state.donation.message;
+export const getEditing = (state) => state.donation.editing
+
+export const { setEditing } = donationSlice.actions
 
 export default donationSlice.reducer;

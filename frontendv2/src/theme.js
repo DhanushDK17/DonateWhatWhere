@@ -90,6 +90,11 @@ export const productTheme = createTheme({
       fontWeight: 400,
       lineHeight: 1.1,
     },
+    body3: {
+      fontSize: 10,
+      fontWeight: 400,
+      lineHeight: 1.1,
+    },
     button: {
       fontSize: 14,
       fontWeight: 400,

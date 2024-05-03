@@ -1,15 +1,15 @@
 import { Stack, IconButton, Typography, TextField, Grid, CircularProgress, Button, Dialog, DialogTitle, DialogActions, DialogContent } from "@mui/material"
 import { useEffect, useState } from "react"
-import { fetchEvents, createEvent } from "../api/events"
+import { fetchEvents, createEvent, updateEvent } from "../api/events"
 import AddIcon from "@mui/icons-material/Add"
 import CloseIcon from "@mui/icons-material/Close"
 import LoadingButton from "@mui/lab/LoadingButton"
 import SearchIcon from "@mui/icons-material/Search"
-import { fetchEventsAction } from "../store/slices/event"
+import event, { fetchEventsAction, getEvents, getEventsStatus } from "../store/slices/event"
 import { getUser} from "../store/slices/user"
 import { useDispatch, useSelector } from "react-redux"
 import { EventItem } from "../components/EventItem"
-
+import moment from 'moment'
 
 export const Events = () => {
 
@@ -21,17 +21,22 @@ export const Events = () => {
     const [showCreateDialog, setShowCreateDialog] = useState(false)
     const [createLoading, setCreateLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
+    const [editing, setEditing] = useState(false)
+    const [address, setAddress] = useState('')
+    const [currentEvent, setCurrentEvent] = useState('')
     
     const [selAddress, setSelectedAddress] = useState('')
     const [org, setOrganization] = useState('')
     const dispatch = useDispatch()
     const user = useSelector(getUser)
+    const eventsData = useSelector(getEvents)
+    const status = useSelector(getEventsStatus)
 
     useEffect(() => {
         handleFetchEvents()
         const getData = setTimeout(() => {
-            handleFetchEvents()
-            // dispatch(fetchEventsAction)
+            // handleFetchEvents()
+            dispatch(fetchEventsAction())
         }, 1000)
         return () => clearTimeout(getData)
     }, [searchTerm, selAddress, org])
@@ -47,6 +52,7 @@ export const Events = () => {
     }
 
     const handleCloseCreate = () => {
+        setEditing(false)
         setShowCreateDialog(false)
     }
 
@@ -63,15 +69,44 @@ export const Events = () => {
     }
 
     const handleConfirmCreateEvent = () => {
-        setCreateLoading(true)
-        createEvent({name: title, description, datetime: date})
-        .then(data => fetchEvents())
-        .catch(error => console.error(error))
-        .finally(() => setCreateLoading(false))
+        if (editing) {
+            setCreateLoading(true)
+            updateEvent(currentEvent, {name: title, description, datetime: date, address})
+            .then(data => {
+                dispatch(fetchEventsAction())
+                setEditing(false)
+                setShowCreateDialog(false)
+            })
+            .catch(error => console.error(error))
+            .finally(() => setCreateLoading(false))
+        } else {
+            setCreateLoading(true)
+            createEvent({name: title, description, datetime: date, address})
+            .then(data => {
+                dispatch(fetchEventsAction())
+                setShowCreateDialog(false)
+            })
+            .catch(error => console.error(error))
+            .finally(() => setCreateLoading(false))
+        }
     }
 
-    const handleCreate = () => {
-        setShowCreateDialog(true)
+    const handleCreate = (e, eventData) => {
+        console.log(eventData)
+        if (eventData === undefined) {
+            setEditing(false)
+            setShowCreateDialog(true)
+        } else {
+            setEditing(true)
+            setCurrentEvent(eventData.id)
+            setTitle(eventData.name)
+            setDescription(eventData.description)
+            setDate(eventData.datetime)
+            setAddress(eventData.address)
+            console.log(moment(eventData.datetime).format('yyyy-MM-DD'))
+            setDate(moment(eventData.datetime).format('yyyy-MM-DD'))
+            setShowCreateDialog(true)
+        }
     }
 
     const handleInputChange = (e) => {
@@ -86,6 +121,10 @@ export const Events = () => {
         setSelectedAddress(e.target.value)
     }
 
+    const handleLocationChange = (e) => {
+        setAddress(e.target.value)
+    }
+
 
 
     return (
@@ -93,7 +132,7 @@ export const Events = () => {
             {
                 loading ? <CircularProgress/>
                 :
-                <Grid container sx={{mt: 3}}>
+                <Grid container sx={{mt: 3}} justifyContent="center" alignItems="center">
                     <Grid container justifyContent="center" alignItems="center">
                         <Typography variant="h3">Events</Typography>
                         <Grid item xs={5}>
@@ -125,19 +164,31 @@ export const Events = () => {
                         </Grid>
                         {user.user_type === 'ORGANIZATION' && 
                             <Grid item xs={2}>
-                                <Button onClick={handleCreate} variant="h6">
-                                    <AddIcon/> Create Event
+                                <Button onClick={(event) => handleCreate(event, undefined)} variant="h6">
+                                    <AddIcon/> {currentEvent === '' ? "Create Event" : "Update Event"}
                                 </Button>
                             </Grid>
                         }
                     </Grid>
+                    <Grid container justifyContent="center" alignItems="center">
                     {
-                        events.map((event, index) =>
+                        status === 'loading'
+                        ?
+                        <CircularProgress/>
+                        :
+                        eventsData.length > 0
+                        ?
+                        <Grid container>
+                            {eventsData.map((event, index) =>
                             <Grid item xs={3} sx={{ml: 2, mt: 2}} key={index}>
-                                <EventItem event={event}/>
-                            </Grid>
-                        )
+                                <EventItem event={event} onEdit={handleCreate}/>
+                            </Grid>)}
+                        </Grid>
+                        :
+                        <CircularProgress sx={{mt: 10}} />
+
                     }
+                    </Grid>
                 </Grid>
             }
             <Dialog
@@ -164,6 +215,10 @@ export const Events = () => {
                                     <TextField type="date" fullWidth size="small" label="Date and Time"  value={date} onChange={handleDateChange}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sx={{mb: 2}}>
+                                    <TextField fullWidth size="small" label="Address"  value={address} onChange={handleLocationChange}
+                                    />
+                                </Grid>
                                 <Grid item xs={12} sx={{mt: 2}}>
                                     <TextField multiline rows={5}
                                     fullWidth
@@ -179,7 +234,9 @@ export const Events = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button variant="outlined" onClick={handleCloseCreate}>Cancel</Button>
-                    <LoadingButton variant="contained" disabled={createLoading} sx={{backgroundColor: "primary.main"}} loading={createLoading} onClick={handleConfirmCreateEvent}>Create</LoadingButton>
+                    <LoadingButton variant="contained" disabled={createLoading} sx={{backgroundColor: "primary.main"}} loading={createLoading} onClick={handleConfirmCreateEvent}>{
+                    editing ? "Update" : "Create"
+                    }</LoadingButton>
                 </DialogActions>
             </Dialog>
         </>

@@ -47,7 +47,7 @@ const ChatComponent = ({ conversation }) => {
         socket.current.disconnect();
       }
     };
-  }, [conversation_id, person2, messages]);
+  }, [conversation_id]);
 
   const fetchMessages = async () => {
     if (conversation_id) {
@@ -119,9 +119,9 @@ const ChatComponent = ({ conversation }) => {
         );
         //Uncomment these lines
 
-        setTimeout(() => {
+        setInterval(() => {
           fetchMessages();
-        }, 5000);
+        }, 500);
 
         // Do something with the response if needed
       } catch (error) {

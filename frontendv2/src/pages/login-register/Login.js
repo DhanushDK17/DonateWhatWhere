@@ -56,6 +56,7 @@ const Login = () => {
         const { name, email, phone, has_car, access, refresh } = data;
 
         sessionStorage.setItem("profile", JSON.stringify(data.user));
+        sessionStorage.setItem("userData", JSON.stringify(data.user));
         sessionStorage.setItem("access", JSON.stringify(access));
         sessionStorage.setItem("refresh", JSON.stringify(refresh));
         // Now you can handle the logged-in user, access token, and refresh token
@@ -109,9 +110,9 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <div className="eye-icon" onClick={handleTogglePassword}>
+                {/* <div className="eye-icon" onClick={handleTogglePassword}>
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </div>
+                </div> */}
 
                 <button type="submit" className="submit-btn">
                   Login
